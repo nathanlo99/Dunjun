@@ -16,5 +16,5 @@ clean: $(EXEC)
 $(EXEC): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(EXEC)
 
-bin/main.o:	src/main.cpp
+bin/main.o: src/main.cpp
 	$(CXX) $(CXXFLAGS) -c src/main.cpp -o bin/main.o

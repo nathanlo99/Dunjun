@@ -1,0 +1,6 @@
+
+*.o
+bin/*
+data/*
+.DS_Store
+dunjun
