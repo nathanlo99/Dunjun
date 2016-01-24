@@ -1,9 +1,9 @@
 #ifndef DUNJUN_COMMON_HPP
 #define DUNJUN_COMMON_HPP
 
-#define global static
-#define internal static
-#define local_persist static
+#define GLOBAL static
+#define INTERNAL static
+#define LOCAL_PERSIST static
 
 namespace Dunjun {
 

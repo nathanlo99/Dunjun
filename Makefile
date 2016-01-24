@@ -1,16 +1,20 @@
 G++ = /usr/local/Cellar/gcc/5.3.0/bin/g++-5
-OBJECTS = bin/main.o
-FLAGS = -std=c++11 -Wall -Ofast \
+OBJECTS = bin/main.o bin/ShaderProgram.o
+FLAGS = -std=c++11 -Ofast \
 	-I include \
 	-Llibs -lglfw3 -lGLEW \
 	-framework OpenGL
-EXEC = dunjun
+WARNINGS = -pedantic -Wall -Wextra -Werror -Wno-unused
+EXEC = main
 
 all: $(EXEC)
 	./$(EXEC)
 
 $(EXEC): $(OBJECTS)
-	$(G++) $(FLAGS) $(OBJECTS) -o $(EXEC)
+	$(G++) $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)
 
-bin/main.o: src/main.cpp
-	$(G++) $(FLAGS) -c src/main.cpp -o bin/main.o
+bin/%.o: src/%.cpp
+	$(G++) $(WARNINGS) $(FLAGS) -c $< -o $@
+
+bin/%.o: src/Dunjun/%.cpp
+	$(G++) $(WARNINGS) $(FLAGS) -c $< -o $@

@@ -1,42 +1,39 @@
 #define GLEW_STATIC
 
+#include <cmath>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
 #include <Dunjun/common.hpp>
 
+#include <Dunjun/ShaderProgram.hpp>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl.h>
 
-global const int g_windowWidth = 854;
-global const int g_windowHeight = 480;
-global const char *g_windowTitle = "Dunjun";
+GLOBAL const int g_windowWidth   = 854;
+GLOBAL const int g_windowHeight  = 480;
+GLOBAL const char* g_windowTitle = "Dunjun";
 
 // Uncomment when fullscreen is re-implemented
 // global int g_fullWidth, g_fullHeight;
 
-// Tell GLFW to use OpenGL 2.1 whenever creating a window
-inline void glfwHints() {
+int main(int argc, char** argv) {
+
+  // Initialize GLFW
+  if (!glfwInit()) return -1;
+
+  // Create a window and its OpenGL context, set to OpenGL 2.1
   glfwWindowHint(GLFW_VERSION_MAJOR, 2);
   glfwWindowHint(GLFW_VERSION_MINOR, 1);
-}
 
-int main(int argc, char **argv) {
-
-  GLFWwindow *window;
-
-  // Initialize the library
-  if (!glfwInit()) {
-    return -1;
-  }
-
-  // Create a window and its OpenGL context
-  glfwHints();
-  window = glfwCreateWindow(g_windowWidth, g_windowHeight, g_windowTitle,
-                            nullptr, nullptr);
+  GLFWwindow* window = glfwCreateWindow(g_windowWidth, g_windowHeight,
+                                        g_windowTitle, nullptr, nullptr);
   if (!window) {
+    std::cout << "GLFWwindow could not be created!" << std::endl;
     glfwTerminate();
     return -1;
   }
@@ -44,10 +41,15 @@ int main(int argc, char **argv) {
   // Make the window's current context
   glfwMakeContextCurrent(window);
 
-  // Initializes GLEW. This *must* be done after the OpenGL context creation and
-  // GLFW initialization.
-  if (glewInit() != GLEW_OK)
+  // Initializes GLEW. This *must* be done after the OpenGL context creation
+  // and GLFW initialization.
+  if (glewInit() != GLEW_OK) {
+    std::cerr << "Could not initialize GLEW" << std::endl;
     return glGetError();
+  }
+
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 
   // Detects the primary monitor's screen width and height (Disabled until
   // fullscreen is fixed)
@@ -58,73 +60,28 @@ int main(int argc, char **argv) {
   // << g_fullHeight << " pixels." << std::endl;
   // bool fullscreen = false;
 
-  { // Initialize VBO and shader program
-    // Vertices in CCW Order
-    float vertices[] = {0.0f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f};
+  // Initialize VBO and shader program
+  // Vertices in CCW Order
+  float vertices[] = {
+      +0.5f, +0.5f, +1.0f, +1.0f, +1.0f, // Vertex 0
+      -0.5f, +0.5f, +0.0f, +0.0f, +1.0f, // Vertex 1
+      +0.5f, -0.5f, +0.0f, +1.0f, +0.0f, // Vertex 2
+      -0.5f, -0.5f, +1.0f, +0.0f, +0.0f, // Vertex 3
+  };
 
-    GLuint vbo; // Vertex Buffer Object
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    const char *vertexShaderText = {
-        "#version 120\n"
-        "attribute vec2 position; "
-        "void main(){ gl_Position = vec4(position, 0.0, 1.0); }"};
-    const char *fragmentShaderText = {
-        "#version 120\n"
-        "void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); }"};
-
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderText, nullptr);
-    glCompileShader(vertexShader);
-
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderText, nullptr);
-    glCompileShader(fragmentShader);
-
-    GLint success = 0;
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (success == GL_FALSE) {
-      GLint maxLength = 0;
-      glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
-      std::vector<GLchar> errorLog(maxLength);
-      glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &errorLog[0]);
-      std::cout << (char *)&errorLog[0] << std::endl;
-      glDeleteShader(vertexShader);
-    }
-
-    success = 0;
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (success == GL_FALSE) {
-      GLint maxLength = 0;
-      glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
-      std::vector<GLchar> errorLog(maxLength);
-      glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &errorLog[0]);
-      std::cout << (char *)&errorLog[0] << std::endl;
-      glDeleteShader(fragmentShader);
-    }
-
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glBindAttribLocation(shaderProgram, 0, "position");
-    glLinkProgram(shaderProgram);
-
-    success = 0;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (success == GL_FALSE) {
-      GLint maxLength = 0;
-      glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &maxLength);
-
-      std::vector<GLchar> infoLog(maxLength);
-      glGetProgramInfoLog(shaderProgram, maxLength, &maxLength, &infoLog[0]);
-      std::cout << (char *)&infoLog[0] << std::endl;
-      glDeleteProgram(shaderProgram);
-    }
-
-    glUseProgram(shaderProgram);
-  }
+  GLuint vbo; // Vertex Buffer Object
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  Dunjun::ShaderProgram shader;
+  shader.attachShaderFromFile(GL_VERTEX_SHADER,
+                              "res/shaders/default.vert.glsl");
+  shader.attachShaderFromFile(GL_FRAGMENT_SHADER,
+                              "res/shaders/default.frag.glsl");
+  shader.bindAttribLocation(0, "v_position");
+  shader.bindAttribLocation(1, "v_color");
+  shader.link();
+  shader.use();
 
   // Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
@@ -132,12 +89,15 @@ int main(int argc, char **argv) {
     glClearColor(0.5f, 0.69f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    { // Render here
-      glEnableVertexAttribArray(0);
-      glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-      glDisableVertexAttribArray(0);
-    }
+    // Render here
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (const GLvoid*)(2 * sizeof(float)));
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
 
     // Swap buffers
     glfwSwapBuffers(window);
@@ -146,8 +106,7 @@ int main(int argc, char **argv) {
     glfwPollEvents();
 
     // Exit if ESCAPE is pressed
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE))
-      break;
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE)) break;
 
     // Toggle fullscreen if F11 is pressed (Disabled until later fix)
     // if (glfwGetKey(window, GLFW_KEY_F11)) {
