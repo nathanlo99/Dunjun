@@ -1,10 +1,6 @@
 #define GLEW_STATIC
 
-#include <cmath>
-#include <fstream>
 #include <iostream>
-#include <string>
-#include <vector>
 
 #include <Dunjun/common.hpp>
 
@@ -40,7 +36,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // Make the window's current context
+  // Make the window's context current
   glfwMakeContextCurrent(window);
 
   // Initializes GLEW. This *must* be done after the OpenGL context creation
@@ -50,6 +46,7 @@ int main(int argc, char** argv) {
     return glGetError();
   }
 
+  // Enables face-culling
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
@@ -62,7 +59,6 @@ int main(int argc, char** argv) {
   // << g_fullHeight << " pixels." << std::endl;
   // bool fullscreen = false;
 
-  // Initialize VBO and shader program
   // Vertices in CCW Order
   float vertices[] = {
       //  x      y     r     g     b     u     v
@@ -72,7 +68,8 @@ int main(int argc, char** argv) {
       -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Vertex 3
   };
 
-  GLuint vbo; // Vertex Buffer Object
+  // Initialize Vertex Buffer Object and shader program
+  GLuint vbo;
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -97,6 +94,7 @@ int main(int argc, char** argv) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+  // Loads the kitten texture into texture slot 0
   unsigned char* image;
   int width, height, comp;
   image = stbi_load("res/textures/kitten.jpg", &width, &height, &comp, 0);
@@ -110,6 +108,8 @@ int main(int argc, char** argv) {
 
   // Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
+
+    // Updates the viewport in case the user resizes the window
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);

@@ -6,6 +6,7 @@
 
 namespace Dunjun {
 
+// Reads an entire fire into a std::string
 INTERNAL std::string readFile(const std::string& fileName) {
   std::ifstream file;
   file.open(fileName.c_str(), std::ios::in | std::ios::binary);

@@ -9,7 +9,7 @@
 #include <GLFW/glfw3.h>
 
 namespace Dunjun {
-class ShaderProgram {
+class ShaderProgram { // Wrapper class for an OpenGL shader
   public:
   ShaderProgram();
   virtual ~ShaderProgram();

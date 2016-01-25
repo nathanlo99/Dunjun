@@ -1,5 +1,5 @@
 G++ = /usr/local/Cellar/gcc/5.3.0/bin/g++-5
-OBJECTS = bin/main.o bin/ShaderProgram.o
+OBJECTS = bin/main.o bin/Dunjun/ShaderProgram.o
 FLAGS = -std=c++11 \
 	-I include \
 	-Llibs -lglfw3 -lGLEW \
@@ -20,6 +20,6 @@ bin/%.o: src/%.cpp
 	@echo g++ $(WARNINGS) $(FLAGS) -c $< -o $@
 	@$(G++) $(WARNINGS) $(FLAGS) -c $< -o $@
 
-bin/%.o: src/Dunjun/%.cpp
+bin/Dunjun/%.o: src/Dunjun/%.cpp
 	@echo g++ $(WARNINGS) $(FLAGS) -c $< -o $@
 	@$(G++) $(WARNINGS) $(FLAGS) -c $< -o $@
