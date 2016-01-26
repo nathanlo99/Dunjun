@@ -5,10 +5,9 @@
 #define INTERNAL static
 #define LOCAL_PERSIST static
 
-namespace Dunjun {
+#include <Dunjun/types.hpp>
 
-using float32 = float;
-using float64 = double;
+namespace Dunjun {
 
 } // namespace Dunjun
 

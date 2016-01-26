@@ -35,8 +35,8 @@ class ShaderProgram { // Wrapper class for an OpenGL shader
   void setUniform(const GLchar* name, unsigned int x);
   void setUniform(const GLchar* name, bool x);
 
-  inline GLuint getObject() const { return m_program; }
-  inline const std::string& getErrorLog() const { return m_errorLog; }
+  inline GLuint program() const { return m_program; }
+  inline const std::string& errorLog() const { return m_errorLog; }
 
   private:
   GLuint m_program;

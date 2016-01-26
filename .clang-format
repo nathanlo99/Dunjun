@@ -21,7 +21,7 @@
     AllowShortLoopsOnASingleLine: true,
     #
     BinPackArguments: true,
-    BinPackParameters: false,
+    BinPackParameters: true,
     #
     BreakConstructorInitializersBeforeComma: false,
     ConstructorInitializerIndentWidth: 0,

@@ -1,10 +1,11 @@
 G++ = /usr/local/Cellar/gcc/5.3.0/bin/g++-5
-OBJECTS = bin/main.o bin/Dunjun/ShaderProgram.o
+OBJECTS = bin/main.o bin/Dunjun/ShaderProgram.o bin/Dunjun/Texture.o \
+	bin/Dunjun/Image.o
 FLAGS = -std=c++11 \
 	-I include \
 	-Llibs -lglfw3 -lGLEW \
 	-framework OpenGL
-WARNINGS = -Wall
+WARNINGS = -Wall -Wno-unused
 EXEC = main
 
 all: $(EXEC)

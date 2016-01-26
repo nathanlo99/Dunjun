@@ -5,11 +5,14 @@
 #include <Dunjun/common.hpp>
 
 #include <Dunjun/ShaderProgram.hpp>
+#include <Dunjun/Image.hpp>
+#include <Dunjun/Texture.hpp>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl.h>
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_FAILURE_USERMSG
 #include <STB/stb_image.h>
 
 GLOBAL const int g_windowWidth   = 854;
@@ -95,16 +98,11 @@ int main(int argc, char** argv) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // Loads the kitten texture into texture slot 0
-  unsigned char* image;
-  int width, height, comp;
-  image = stbi_load("res/textures/kitten.jpg", &width, &height, &comp, 0);
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, image);
-
+  Dunjun::Image image("res/textures/kitten.jpg");
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width(), image.height(), 0,
+               GL_RGB, GL_UNSIGNED_BYTE, image.pixels());
   shader.setUniform("u_tex", 0);
   glActiveTexture(GL_TEXTURE0);
-  stbi_image_free(image);
 
   // Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
