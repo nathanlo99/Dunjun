@@ -5,10 +5,15 @@
 #define INTERNAL static
 #define LOCAL_PERSIST static
 
+#include <iostream>
+
 #include <Dunjun/types.hpp>
 
-namespace Dunjun {
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <OpenGL/gl.h>
 
-} // namespace Dunjun
+namespace Dunjun {} // namespace Dunjun
 
 #endif

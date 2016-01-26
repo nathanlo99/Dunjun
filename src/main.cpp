@@ -1,15 +1,8 @@
-#define GLEW_STATIC
-
-#include <iostream>
-
 #include <Dunjun/common.hpp>
 #include <Dunjun/ShaderProgram.hpp>
 #include <Dunjun/Image.hpp>
 #include <Dunjun/Texture.hpp>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <OpenGL/gl.h>
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
 #include <STB/stb_image.h>
@@ -87,21 +80,10 @@ int main(int argc, char** argv) {
   shader.link();
   shader.use();
 
-  // Initializes the textures
-  GLuint tex;
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_2D, tex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
   // Loads the kitten texture into texture slot 0
-  Dunjun::Image image("res/textures/kitten.jpg");
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width(), image.height(), 0,
-               GL_RGB, GL_UNSIGNED_BYTE, image.pixels());
+  Dunjun::Texture texture("res/textures/kitten.jpg");
+  texture.bind(0);
   shader.setUniform("u_tex", 0);
-  glActiveTexture(GL_TEXTURE0);
 
   // Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {

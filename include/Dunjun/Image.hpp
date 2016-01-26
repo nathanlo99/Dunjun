@@ -1,6 +1,7 @@
 #ifndef DUNJUN_IMAGE_HPP
 #define DUNJUN_IMAGE_HPP
 
+#include <Dunjun/common.hpp>
 #include <Dunjun/types.hpp>
 
 namespace Dunjun {

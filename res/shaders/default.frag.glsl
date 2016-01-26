@@ -7,5 +7,7 @@ varying vec2 f_texCoord;
 
 void main() {
   vec3 texColor = texture2D(u_tex, f_texCoord).rgb;
-  gl_FragColor = vec4(texColor * f_color, 1.0);
+  vec3 gamma = vec3(1.0/2.2);
+  vec3 color = texColor * f_color;
+  gl_FragColor = vec4(pow(color, gamma), 1.0);
 }

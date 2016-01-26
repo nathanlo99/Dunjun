@@ -4,12 +4,10 @@
 #include <string>
 
 #include <Dunjun/common.hpp>
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <Dunjun/NonCopyable.hpp>
 
 namespace Dunjun {
-class ShaderProgram { // Wrapper class for an OpenGL shader
+class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   public:
   ShaderProgram();
   virtual ~ShaderProgram();
