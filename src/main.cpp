@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include <Dunjun/common.hpp>
-
 #include <Dunjun/ShaderProgram.hpp>
 #include <Dunjun/Image.hpp>
 #include <Dunjun/Texture.hpp>

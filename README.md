@@ -10,3 +10,4 @@ Episode List
 * [004 - Shader Program Class](https://youtu.be/fLSLJ66AEOU)
 * [005 - Textures (STB)](https://youtu.be/eiz7ZZBtUA0)
 * [006 - Image Loader](https://youtu.be/Wl0jh_CBT8w)
+* [007 - Texture Wrapper](https://youtu.be/2i2jX4yb8sI)

@@ -1,7 +1,8 @@
 #include <Dunjun/Image.hpp>
 
-#include <iostream>
-#include <cstring>
+#include <iostream> // std::cerr
+#include <cstring>  // memcpy
+#include <cstddef>  // std::size_t
 
 #include <STB/stb_image.h>
 
@@ -11,7 +12,7 @@ Image::Image() {}
 
 Image::Image(const char* fileName) {
   int width, height, format;
-  uint8* pixels = stbi_load(fileName, &width, &height, &format, 0);
+  u8* pixels = stbi_load(fileName, &width, &height, &format, 0);
   if (!pixels) {
     std::cerr << stbi_failure_reason() << std::endl;
     std::exit(1);
@@ -20,7 +21,7 @@ Image::Image(const char* fileName) {
   stbi_image_free(pixels);
 }
 
-Image::Image(uint32 width, uint32 height, uint32 format, const uint8* pixels) {
+Image::Image(u32 width, u32 height, u32 format, const u8* pixels) {
   loadFromMemory(width, height, format, pixels);
 }
 
@@ -39,7 +40,7 @@ Image::~Image() {
 
 void Image::loadFromFile(const char* fileName) {
   int width, height, format;
-  uint8* pixels = stbi_load(fileName, &width, &height, &format, 0);
+  u8* pixels = stbi_load(fileName, &width, &height, &format, 0);
   if (!pixels) {
     std::cerr << stbi_failure_reason() << std::endl;
     std::exit(1);
@@ -49,7 +50,7 @@ void Image::loadFromFile(const char* fileName) {
   stbi_image_free(pixels);
 }
 
-void Image::loadFromMemory(uint32 w, uint32 h, uint32 f, const uint8* pixels) {
+void Image::loadFromMemory(u32 w, u32 h, u32 f, const u8* pixels) {
   if (w == 0) {
     std::cerr << "Image with 0 width" << std::endl;
     std::exit(1);
@@ -61,23 +62,23 @@ void Image::loadFromMemory(uint32 w, uint32 h, uint32 f, const uint8* pixels) {
     std::exit(1);
   }
 
-  m_width        = w;
-  m_height       = h;
-  m_format       = f;
-  size imageSize = w * h * f;
+  m_width               = w;
+  m_height              = h;
+  m_format              = f;
+  std::size_t imageSize = w * h * f;
 
   if (m_pixels) delete[] m_pixels;
-  m_pixels = new uint8[imageSize];
+  m_pixels = new u8[imageSize];
   if (m_pixels) memcpy(m_pixels, pixels, imageSize);
 }
 
 void Image::flipVertically() {
-  size pitch       = m_width * m_format;
-  uint32 halfRows  = m_height / 2;
-  uint8* rowBuffer = new uint8[pitch];
-  for (uint32 i = 0; i < halfRows; i++) {
-    uint8* row      = m_pixels + i * pitch;
-    uint8* opposite = m_pixels + (m_height - i - 1) * pitch;
+  std::size_t pitch = m_width * m_format;
+  u32 halfRows      = m_height / 2;
+  u8* rowBuffer = new u8[pitch];
+  for (u32 i = 0; i < halfRows; i++) {
+    u8* row      = m_pixels + i * pitch;
+    u8* opposite = m_pixels + (m_height - i - 1) * pitch;
     memcpy(rowBuffer, row, pitch);
     memcpy(row, opposite, pitch);
     memcpy(opposite, rowBuffer, pitch);
@@ -87,19 +88,19 @@ void Image::flipVertically() {
 
 void Image::rotateCCW() { return; }
 
-void Image::copyRectFromImage(const Image& src, uint32 sc, uint32 sr, uint32 tc,
-                              uint32 tr, uint32 w, uint32 h) {
+void Image::copyRectFromImage(const Image& src, u32 sc, u32 sr, u32 tc, u32 tr,
+                              u32 w, u32 h) {
   return;
 }
 
-uint8* Image::getPixel(uint32 c, uint32 r) const {
+u8* Image::getPixel(u32 c, u32 r) const {
   if (c >= m_width || r >= m_height) return nullptr;
   return m_pixels + (r * m_width + c) * m_format;
 }
 
-void Image::setPixel(uint32 c, uint32 r, const uint32* pixel) {
+void Image::setPixel(u32 c, u32 r, const u32* pixel) {
   if (c >= m_width || r >= m_height) return;
-  uint8* p = getPixel(c, r);
+  u8* p = getPixel(c, r);
   memcpy(p, pixel, m_format);
 }
 
