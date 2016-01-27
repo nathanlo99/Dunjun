@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include <Dunjun/common.hpp>
 #include <Dunjun/ShaderProgram.hpp>
 #include <Dunjun/Image.hpp>
@@ -14,7 +16,87 @@ GLOBAL const char* g_windowTitle = "Dunjun";
 // Uncomment when fullscreen is re-implemented
 // GLOBAL int g_fullWidth, g_fullHeight;
 
-int main(int argc, char** argv) {
+class Clock {
+  public:
+  inline double getElapsedTime() const { return glfwGetTime() - m_startTime; }
+  inline double restart() {
+    double now     = glfwGetTime();
+    double elapsed = now - m_startTime;
+    m_startTime    = now;
+    return elapsed;
+  }
+
+  private:
+  double m_startTime = glfwGetTime();
+};
+
+class TickCounter {
+  public:
+  bool update(double frequency) {
+    bool reset = false;
+    if (m_clock.getElapsedTime() >= frequency) {
+      m_tickRate = m_ticks / frequency;
+      m_ticks    = 0;
+      reset = true;
+      m_clock.restart();
+    }
+    m_ticks++;
+    return reset;
+  }
+
+  inline std::size_t tickRate() const { return m_tickRate; }
+
+  private:
+  std::size_t m_ticks = 0, m_tickRate = 0;
+  Clock m_clock;
+};
+
+INTERNAL void render() {
+  glClearColor(0.5f, 0.69f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  glEnableVertexAttribArray(0); // v_pos
+  glEnableVertexAttribArray(1); // v_color
+  glEnableVertexAttribArray(2); // v_texCoord
+
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                        (const GLvoid*)(0 * sizeof(float)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                        (const GLvoid*)(2 * sizeof(float)));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                        (const GLvoid*)(5 * sizeof(float)));
+
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+}
+
+INTERNAL void handleInput(GLFWwindow* window, bool* running, bool* fullscreen) {
+  glfwPollEvents();
+
+  // Exit if ESCAPE is pressed
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE)) *running = false;
+
+  // Toggle fullscreen if F11 is pressed (Disabled until later fix)
+  // if (glfwGetKey(window, GLFW_KEY_F11)) {
+  //   *fullscreen = !*fullscreen;
+  //   GLFWwindow *newWindow;
+  //   if (*fullscreen) {
+  //     newWindow = glfwCreateWindow(g_fullWidth, g_fullHeight,
+  //     g_windowTitle, glfwGetPrimaryMonitor(), window);
+  //   } else {
+  //     newWindow = glfwCreateWindow(g_windowWidth, g_windowHeight,
+  //                                  g_windowTitle, nullptr, window);
+  //   }
+  //   glfwDestroyWindow(window);
+  //   window = newWindow;
+  //   glfwMakeContextCurrent(window);
+  // }
+}
+
+int main() {
 
   // Initialize GLFW
   if (!glfwInit()) return -1;
@@ -34,12 +116,13 @@ int main(int argc, char** argv) {
   // Make the window's context current
   glfwMakeContextCurrent(window);
 
+  // Pass in > 0 to enable v-syncing
+  glfwSwapInterval(0);
+
   // Initializes GLEW. This *must* be done after the OpenGL context creation
   // and GLFW initialization.
-  if (glewInit() != GLEW_OK) {
-    std::cerr << "Could not initialize GLEW" << std::endl;
-    return glGetError();
-  }
+  if (glewInit() != GLEW_OK)
+    throw std::runtime_error("Could not initialize GLEW");
 
   // Enables face-culling
   glEnable(GL_CULL_FACE);
@@ -85,61 +168,25 @@ int main(int argc, char** argv) {
   texture.bind(0);
   shader.setUniform("u_tex", 0);
 
-  // Loop until the user closes the window
-  while (!glfwWindowShouldClose(window)) {
+  bool running = true, fullscreen = false;
+  TickCounter tc;
 
+  // Main loop
+  while (!glfwWindowShouldClose(window) && running) {
     // Updates the viewport in case the user resizes the window
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
-
-    // Clears the buffer
-    glClearColor(0.5f, 0.69f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // Render here
-    glEnableVertexAttribArray(0); // v_pos
-    glEnableVertexAttribArray(1); // v_color
-    glEnableVertexAttribArray(2); // v_texCoord
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
-                          (const GLvoid*)(0 * sizeof(float)));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
-                          (const GLvoid*)(2 * sizeof(float)));
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
-                          (const GLvoid*)(5 * sizeof(float)));
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-
-    // Swap buffers
+    if (tc.update(1.0)) {
+      std::size_t tps   = tc.tickRate();
+      std::string title = std::string(g_windowTitle) + " | " +
+                          std::to_string(tps) + " TPS | " +
+                          std::to_string(1000. / tps) + " MS/F";
+      glfwSetWindowTitle(window, title.c_str());
+    }
+    render();
     glfwSwapBuffers(window);
-
-    // Poll for and process events
-    glfwPollEvents();
-
-    // Exit if ESCAPE is pressed
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE)) break;
-
-    // Toggle fullscreen if F11 is pressed (Disabled until later fix)
-    // if (glfwGetKey(window, GLFW_KEY_F11)) {
-    //   fullscreen = !fullscreen;
-    //   GLFWwindow *newWindow;
-    //   if (fullscreen) {
-    //     newWindow = glfwCreateWindow(g_fullWidth, g_fullHeight,
-    //     g_windowTitle,
-    //                                  glfwGetPrimaryMonitor(), window);
-    //   } else {
-    //     newWindow = glfwCreateWindow(g_windowWidth, g_windowHeight,
-    //                                  g_windowTitle, nullptr, window);
-    //   }
-    //   glfwDestroyWindow(window);
-    //   window = newWindow;
-    //   glfwMakeContextCurrent(window);
-    // }
+    handleInput(window, &running, &fullscreen);
   }
 
   // Clean up and terminate

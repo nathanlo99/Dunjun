@@ -12,8 +12,8 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   ShaderProgram();
   virtual ~ShaderProgram();
 
-  bool attachShaderFromFile(GLuint type, const std::string& fileName);
-  bool attachShaderFromMemory(GLuint type, const std::string& fileName);
+  void attachShaderFromFile(GLuint type, const std::string& fileName);
+  void attachShaderFromMemory(GLuint type, const std::string& fileName);
 
   void use() const;
   void stopUsing() const;
@@ -37,7 +37,7 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   inline const std::string& errorLog() const { return m_errorLog; }
 
   private:
-  GLuint m_program;
+  GLuint m_program = glCreateProgram();
   std::string m_errorLog;
 };
 

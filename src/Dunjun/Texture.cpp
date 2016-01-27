@@ -12,13 +12,10 @@ INTERNAL GLenum getFormat(u32 format, bool srgb) {
     return srgb ? GL_SRGB : GL_RGB;
   case 4:
     return srgb ? GL_SRGB_ALPHA : GL_RGBA;
+  default:
+    throw std::runtime_error("Invalid format");
   }
-  std::cerr << "Invalid format" << std::endl;
-  std::exit(1);
-  return 0;
 }
-
-Texture::Texture() {}
 
 Texture::Texture(const Image& image, GLint minMagFilter, GLint wrapMode) {
   loadFromImage(image, minMagFilter, wrapMode);
@@ -53,7 +50,7 @@ Texture::~Texture() { glDeleteTextures(1, &m_texture); }
 void Texture::bind(GLuint position) {
   if (position > 31) {
     std::cerr << "Texture position too high: " << position << std::endl;
-    std::cerr << "Binding to position [31]" << std::endl;
+    std::cerr << "Binding to position [31] instead" << std::endl;
   }
 
   glActiveTexture(GL_TEXTURE0 + position);

@@ -9,7 +9,6 @@ namespace Dunjun {
 
 class Texture : public NonCopyable {
   public:
-  Texture();
   Texture(const Image& image, GLint minMagFilter = GL_LINEAR,
           GLint wrapMode = GL_CLAMP_TO_EDGE);
   Texture(const char* fileName, GLint minMagFilter = GL_LINEAR,

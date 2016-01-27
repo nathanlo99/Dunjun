@@ -1,8 +1,7 @@
 #include <Dunjun/Image.hpp>
 
-#include <iostream> // std::cerr
-#include <cstring>  // memcpy
-#include <cstddef>  // std::size_t
+#include <cstring> // memcpy
+#include <cstddef> // std::size_t
 
 #include <STB/stb_image.h>
 
@@ -12,11 +11,9 @@ Image::Image() {}
 
 Image::Image(const char* fileName) {
   int width, height, format;
+  m_pixels   = nullptr;
   u8* pixels = stbi_load(fileName, &width, &height, &format, 0);
-  if (!pixels) {
-    std::cerr << stbi_failure_reason() << std::endl;
-    std::exit(1);
-  }
+  if (!pixels) throw std::runtime_error(stbi_failure_reason());
   loadFromMemory(width, height, format, pixels);
   stbi_image_free(pixels);
 }
@@ -41,26 +38,15 @@ Image::~Image() {
 void Image::loadFromFile(const char* fileName) {
   int width, height, format;
   u8* pixels = stbi_load(fileName, &width, &height, &format, 0);
-  if (!pixels) {
-    std::cerr << stbi_failure_reason() << std::endl;
-    std::exit(1);
-  }
-
+  if (!pixels) throw std::runtime_error(stbi_failure_reason());
   loadFromMemory(width, height, format, pixels);
   stbi_image_free(pixels);
 }
 
 void Image::loadFromMemory(u32 w, u32 h, u32 f, const u8* pixels) {
-  if (w == 0) {
-    std::cerr << "Image with 0 width" << std::endl;
-    std::exit(1);
-  } else if (h == 0) {
-    std::cerr << "Image with 0 height" << std::endl;
-    std::exit(1);
-  } else if (f <= 0 || f >= 4) {
-    std::cerr << "Invalid Texture Format" << std::endl;
-    std::exit(1);
-  }
+  if (w == 0) throw std::runtime_error("Image has 0 width");
+  if (h == 0) throw std::runtime_error("Image has 0 height");
+  if (f <= 0 || f >= 4) throw std::runtime_error("Invalid Image Format");
 
   m_width               = w;
   m_height              = h;

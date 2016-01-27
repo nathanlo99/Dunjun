@@ -11,3 +11,4 @@ Episode List
 * [005 - Textures (STB)](https://youtu.be/eiz7ZZBtUA0)
 * [006 - Image Loader](https://youtu.be/Wl0jh_CBT8w)
 * [007 - Texture Wrapper](https://youtu.be/2i2jX4yb8sI)
+* [008 - Error Handling and Code Tidying](https://youtu.be/jUUGEFV7rk0)

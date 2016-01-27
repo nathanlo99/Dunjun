@@ -6,6 +6,7 @@
 #define LOCAL_PERSIST static
 
 #include <iostream>
+#include <stdexcept>
 
 #include <Dunjun/types.hpp>
 
