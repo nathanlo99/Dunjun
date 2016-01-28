@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DUNJUN_NONCOPYABLE_HPP
 #define DUNJUN_NONCOPYABLE_HPP
 

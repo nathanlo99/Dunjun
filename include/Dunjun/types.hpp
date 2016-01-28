@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DUNJUN_TYPES_HPP
 #define DUNJUN_TYPES_HPP
 

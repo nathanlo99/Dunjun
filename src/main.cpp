@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include <sstream>
 
 #include <Dunjun/common.hpp>
@@ -170,6 +172,7 @@ int main() {
 
   bool running = true, fullscreen = false;
   TickCounter tc;
+  Clock frameClock;
 
   // Main loop
   while (!glfwWindowShouldClose(window) && running) {
@@ -182,11 +185,16 @@ int main() {
       std::string title = std::string(g_windowTitle) + " | " +
                           std::to_string(tps) + " TPS | " +
                           std::to_string(1000. / tps) + " MS/F";
+      std::cout << title << std::endl;
       glfwSetWindowTitle(window, title.c_str());
     }
     render();
     glfwSwapBuffers(window);
     handleInput(window, &running, &fullscreen);
+
+    while (frameClock.getElapsedTime() < 1.0 / 240.0)
+      ;
+    frameClock.restart();
   }
 
   // Clean up and terminate

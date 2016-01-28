@@ -1,7 +1,7 @@
 G++ = /usr/local/Cellar/gcc/5.3.0/bin/g++-5
 OBJECTS = bin/main.o bin/Dunjun/ShaderProgram.o bin/Dunjun/Texture.o \
 	bin/Dunjun/Image.o
-FLAGS = -std=c++14 -Ofast -g \
+FLAGS = -pipe -std=c++14 -g \
 	-I include \
 	-Llibs -lglfw3 -lGLEW \
 	-framework OpenGL
@@ -9,7 +9,7 @@ WARNINGS = -Wall -Wno-unused -pedantic
 EXEC = main
 
 all: $(EXEC)
-	
+
 debug: $(EXEC)
 	gdb -ex "set environment MALLOC_CHECK_ 2" -ex "start" $(EXEC)
 

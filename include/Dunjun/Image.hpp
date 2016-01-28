@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DUNJUN_IMAGE_HPP
 #define DUNJUN_IMAGE_HPP
 
