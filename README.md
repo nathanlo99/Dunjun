@@ -13,3 +13,4 @@ Episode List
 * [007 - Texture Wrapper](https://youtu.be/2i2jX4yb8sI)
 * [008 - Error Handling and Code Tidying](https://youtu.be/jUUGEFV7rk0)
 * [009 - Introduction to Matrices](https://youtu.be/imjaU0gO1vY)
+* [010 - Basic Vector Types](https://youtu.be/MSHeE7kAqbA)

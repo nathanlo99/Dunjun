@@ -9,12 +9,17 @@ namespace Dunjun {
 
 // Reads an entire fire into a std::string
 INTERNAL std::string readFile(const std::string& fileName) {
-  std::ifstream t(fileName);
-  if (!t.good())
-    throw std::runtime_error(std::string("Failed to open file: ") + fileName);
-  std::stringstream buffer;
-  buffer << t.rdbuf();
-  return buffer.str();
+  std::ifstream in(fileName.c_str(), std::ios::in | std::ios::binary);
+  if (in) {
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+    return contents;
+  }
+  throw std::runtime_error(std::string("Failed to open file: ") + fileName);
 }
 
 ShaderProgram::ShaderProgram() { m_program = glCreateProgram(); }

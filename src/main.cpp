@@ -1,16 +1,15 @@
 #include <unistd.h>
 
-#include <sstream>
-
 #include <Dunjun/common.hpp>
+#include <Dunjun/Clock.hpp>
+#include <Dunjun/TickCounter.hpp>
 #include <Dunjun/ShaderProgram.hpp>
 #include <Dunjun/Image.hpp>
 #include <Dunjun/Texture.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_FAILURE_USERMSG
-#include <STB/stb_image.h>
+#include <Dunjun/Math.hpp>
 
+GLOBAL const int g_fpsCap        = 400;
 GLOBAL const int g_windowWidth   = 854;
 GLOBAL const int g_windowHeight  = 480;
 GLOBAL const char* g_windowTitle = "Dunjun";
@@ -18,39 +17,10 @@ GLOBAL const char* g_windowTitle = "Dunjun";
 // Uncomment when fullscreen is re-implemented
 // GLOBAL int g_fullWidth, g_fullHeight;
 
-class Clock {
-  public:
-  inline double getElapsedTime() const { return glfwGetTime() - m_startTime; }
-  inline double restart() {
-    double now     = glfwGetTime();
-    double elapsed = now - m_startTime;
-    m_startTime    = now;
-    return elapsed;
-  }
-
-  private:
-  double m_startTime = glfwGetTime();
-};
-
-class TickCounter {
-  public:
-  bool update(double frequency) {
-    bool reset = false;
-    if (m_clock.getElapsedTime() >= frequency) {
-      m_tickRate = m_ticks / frequency;
-      m_ticks    = 0;
-      reset = true;
-      m_clock.restart();
-    }
-    m_ticks++;
-    return reset;
-  }
-
-  inline std::size_t tickRate() const { return m_tickRate; }
-
-  private:
-  std::size_t m_ticks = 0, m_tickRate = 0;
-  Clock m_clock;
+struct Vertex {
+  Dunjun::Vector2f pos;
+  Dunjun::Vector3f color;
+  Dunjun::Vector2f texCoords;
 };
 
 INTERNAL void render() {
@@ -140,12 +110,12 @@ int main() {
   // bool fullscreen = false;
 
   // Vertices in CCW Order
-  float vertices[] = {
-      //  x      y     r     g     b     u     v
-      +0.5f, +0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Vertex 0
-      -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-      +0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Vertex 2
-      -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Vertex 3
+  Vertex vertices[] = {
+      //    x      y       r     g     b       u     v
+      {{+0.5f, +0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}, // Vertex 0
+      {{-0.5f, +0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}, // Vertex 1
+      {{+0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}}, // Vertex 2
+      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // Vertex 3
   };
 
   // Initialize Vertex Buffer Object and shader program
@@ -171,8 +141,8 @@ int main() {
   shader.setUniform("u_tex", 0);
 
   bool running = true, fullscreen = false;
-  TickCounter tc;
-  Clock frameClock;
+  Dunjun::TickCounter tc;
+  Dunjun::Clock frameClock;
 
   // Main loop
   while (!glfwWindowShouldClose(window) && running) {
@@ -192,9 +162,8 @@ int main() {
     glfwSwapBuffers(window);
     handleInput(window, &running, &fullscreen);
 
-    while (frameClock.getElapsedTime() < 1.0 / 240.0)
-      ;
-    frameClock.restart();
+    while (frameClock.getElapsedTime() < 1 / (double)g_fpsCap) usleep(10);
+    frameClock.reset();
   }
 
   // Clean up and terminate

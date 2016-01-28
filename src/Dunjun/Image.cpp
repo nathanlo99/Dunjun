@@ -1,8 +1,7 @@
+#include <Dunjun/common.hpp>
 #include <Dunjun/Image.hpp>
 
-#include <cstring> // memcpy
-#include <cstddef> // std::size_t
-
+#define STB_IMAGE_IMPLEMENTATION
 #include <STB/stb_image.h>
 
 namespace Dunjun {

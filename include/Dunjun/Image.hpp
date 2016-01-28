@@ -3,7 +3,6 @@
 #define DUNJUN_IMAGE_HPP
 
 #include <Dunjun/common.hpp>
-#include <Dunjun/types.hpp>
 
 namespace Dunjun {
 

@@ -2,8 +2,6 @@
 #ifndef DUNJUN_SHADERPROGRAM_HPP
 #define DUNJUN_SHADERPROGRAM_HPP
 
-#include <string>
-
 #include <Dunjun/common.hpp>
 #include <Dunjun/NonCopyable.hpp>
 
