@@ -1,6 +1,7 @@
 #include <unistd.h>
 
 #include <Dunjun/common.hpp>
+#include <Dunjun/Color.hpp>
 #include <Dunjun/Clock.hpp>
 #include <Dunjun/TickCounter.hpp>
 #include <Dunjun/ShaderProgram.hpp>
@@ -19,7 +20,7 @@ GLOBAL const char* g_windowTitle = "Dunjun";
 
 struct Vertex {
   Dunjun::Vector2f pos;
-  Dunjun::Vector3f color;
+  Dunjun::Color color;
   Dunjun::Vector2f texCoords;
 };
 
@@ -31,12 +32,13 @@ INTERNAL void render() {
   glEnableVertexAttribArray(1); // v_color
   glEnableVertexAttribArray(2); // v_texCoord
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                         (const GLvoid*)(0 * sizeof(float)));
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
-                        (const GLvoid*)(2 * sizeof(float)));
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
-                        (const GLvoid*)(5 * sizeof(float)));
+  glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex),
+                        (const GLvoid*)(sizeof(Dunjun::Vector2f)));
+  glVertexAttribPointer(
+      2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+      (const GLvoid*)(sizeof(Dunjun::Vector2f) + sizeof(Dunjun::Color)));
 
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -111,11 +113,11 @@ int main() {
 
   // Vertices in CCW Order
   Vertex vertices[] = {
-      //    x      y       r     g     b       u     v
-      {{+0.5f, +0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}, // Vertex 0
-      {{-0.5f, +0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}, // Vertex 1
-      {{+0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}}, // Vertex 2
-      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // Vertex 3
+      //    x      y      r    g    b    a       u     v
+      {{+0.5f, +0.5f}, {255, 255, 255, 255}, {1.0f, 1.0f}}, // Vertex 0
+      {{-0.5f, +0.5f}, {000, 000, 255, 255}, {0.0f, 1.0f}}, // Vertex 1
+      {{+0.5f, -0.5f}, {000, 255, 000, 255}, {1.0f, 0.0f}}, // Vertex 2
+      {{-0.5f, -0.5f}, {255, 000, 000, 255}, {0.0f, 0.0f}}, // Vertex 3
   };
 
   // Initialize Vertex Buffer Object and shader program

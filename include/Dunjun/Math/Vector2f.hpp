@@ -7,7 +7,7 @@
 namespace Dunjun {
 struct Vector2f {
   Vector2f() : x(0), y(0) {}
-  explicit Vector2f(float xy) : x(xy), y(xy) {}
+  explicit Vector2f(float a) : x(a), y(a) {}
   Vector2f(float x, float y) : x(x), y(y) {}
   Vector2f(float xy[2]) : x(xy[0]), y(xy[1]) {}
 
@@ -32,7 +32,7 @@ struct Vector2f {
   }
 
   inline Vector2f operator*(const float s) const {
-    return Vector2f(s * x, s * y);
+    return Vector2f(x * s, y * s);
   }
 
   inline Vector2f& operator*=(const float s) {
@@ -42,7 +42,7 @@ struct Vector2f {
   }
 
   inline Vector2f operator/(const float s) const {
-    return Vector2f(s / x, s / y);
+    return Vector2f(x / s, y / s);
   }
 
   inline Vector2f& operator/=(const float s) {
@@ -55,6 +55,8 @@ struct Vector2f {
   inline float lengthSquared() { return x * x + y * y; }
   inline Vector2f normalized() { return *this / length(); }
   // inline Vector2f& normalize() { return (*this) /= length(); }
+  inline float dot(const Vector2f& v) const { return x * v.x + y * v.y; }
+  inline float cross(const Vector2f& v) const { return x * v.y - y * v.x; }
 
   union {
     float data[2];
@@ -74,14 +76,6 @@ struct Vector2f {
 };
 
 inline Vector2f operator*(const float s, const Vector2f& v) { return v * s; }
-
-inline float dot(const Vector2f& a, const Vector2f& b) {
-  return a.x * b.x + a.y * b.y;
-}
-
-inline float cross(const Vector2f& a, const Vector2f& b) {
-  return a.x * b.y - a.y * b.x;
-}
 
 } // namespace Dunjun
 
