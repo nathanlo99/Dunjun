@@ -14,3 +14,6 @@ Episode List
 * [008 - Error Handling and Code Tidying](https://youtu.be/jUUGEFV7rk0)
 * [009 - Introduction to Matrices](https://youtu.be/imjaU0gO1vY)
 * [010 - Basic Vector Types](https://youtu.be/MSHeE7kAqbA)
+* [011 - Vector Functions](https://youtu.be/sX_1BSVp-ok)
+* [012 - Matrices](https://youtu.be/fcHEk02Hasg)
+* [013 - Matrix Transforms](https://youtu.be/WEpA4NbN-xQ)
