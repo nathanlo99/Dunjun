@@ -2,6 +2,7 @@
 #ifndef DUNJUN_MATH_VECTOR3F_HPP
 #define DUNJUN_MATH_VECTOR3F_HPP
 
+#include <ostream>
 #include <cmath>
 #include <Dunjun/Math/Vector2f.hpp>
 
@@ -83,9 +84,19 @@ struct Vector3f {
   inline const float& operator[](std::size_t index) const {
     return data[index];
   }
+  inline bool operator==(const Vector3f& other) const {
+    return x == other.x && y == other.y && z == other.z;
+  }
+  inline bool operator!=(const Vector3f& other) const {
+    return !(*this == other);
+  }
 };
 
 inline Vector3f operator*(const float s, const Vector3f& v) { return v * s; }
+
+inline std::ostream& operator<<(std::ostream& os, const Vector3f& v) {
+  return os << "Vector3f (" << v.x << ", " << v.y << ", " << v.z << ")";
+}
 
 } // namespace Dunjun
 

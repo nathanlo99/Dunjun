@@ -2,6 +2,7 @@
 #ifndef DUNJUN_MATH_VECTOR2F_HPP
 #define DUNJUN_MATH_VECTOR2F_HPP
 
+#include <ostream>
 #include <cmath>
 
 namespace Dunjun {
@@ -69,14 +70,22 @@ struct Vector2f {
   };
 
   inline float& operator[](std::size_t index) { return data[index]; }
-
   inline const float& operator[](std::size_t index) const {
     return data[index];
+  }
+  inline bool operator==(const Vector2f& other) const {
+    return x == other.x && y == other.y;
+  }
+  inline bool operator!=(const Vector2f& other) const {
+    return !(*this == other);
   }
 };
 
 inline Vector2f operator*(const float s, const Vector2f& v) { return v * s; }
 
+inline std::ostream& operator<<(std::ostream& os, const Vector2f& v) {
+  return os << "Vector2f (" << v.x << ", " << v.y << ")";
+}
 } // namespace Dunjun
 
 #endif

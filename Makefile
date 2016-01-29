@@ -8,6 +8,8 @@ FLAGS = -pipe -std=c++14 -Ofast \
 WARNINGS = -Wall -Wno-unused
 EXEC = main
 
+.PHONY: bin/main.o
+
 all: $(EXEC)
 
 debug: $(EXEC)
@@ -20,9 +22,9 @@ $(EXEC): $(OBJECTS)
 	@echo g++ -g $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)
 	@$(G++) $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)
 
-bin/%.o: src/%.cpp
-	@echo g++ $(WARNINGS) $(FLAGS) -c $< -o $@
-	@$(G++) $(WARNINGS) $(FLAGS) -c $< -o $@
+bin/main.o: src/main.cpp
+	@echo g++ $(WARNINGS) $(FLAGS) -c src/main.cpp -o bin/main.o
+	@$(G++) $(WARNINGS) $(FLAGS) -c src/main.cpp -o bin/main.o
 
 bin/Dunjun/%.o: src/Dunjun/%.cpp
 	@echo g++ $(WARNINGS) $(FLAGS) -c $< -o $@

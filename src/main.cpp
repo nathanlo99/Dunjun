@@ -47,15 +47,15 @@ INTERNAL void render() {
   glDisableVertexAttribArray(2);
 }
 
-INTERNAL void handleInput(GLFWwindow* window, bool* running, bool* fullscreen) {
+INTERNAL void handleInput(GLFWwindow* window, bool& running, bool& fullscreen) {
   glfwPollEvents();
 
   // Exit if ESCAPE is pressed
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE)) *running = false;
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE)) running = false;
 
   // Toggle fullscreen if F11 is pressed (Disabled until later fix)
   // if (glfwGetKey(window, GLFW_KEY_F11)) {
-  //   *fullscreen = !*fullscreen;
+  //   fullscreen = !fullscreen;
   //   GLFWwindow *newWindow;
   //   if (*fullscreen) {
   //     newWindow = glfwCreateWindow(g_fullWidth, g_fullHeight,
@@ -162,7 +162,7 @@ int main() {
     }
     render();
     glfwSwapBuffers(window);
-    handleInput(window, &running, &fullscreen);
+    handleInput(window, running, fullscreen);
 
     while (frameClock.getElapsedTime() < 1 / (double)g_fpsCap) usleep(10);
     frameClock.reset();

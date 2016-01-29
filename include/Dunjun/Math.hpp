@@ -4,5 +4,6 @@
 #include <Dunjun/Math/Vector2f.hpp>
 #include <Dunjun/Math/Vector3f.hpp>
 #include <Dunjun/Math/Vector4f.hpp>
+#include <Dunjun/Math/Matrix4f.hpp>
 
 #endif
