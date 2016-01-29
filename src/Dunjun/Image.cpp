@@ -1,7 +1,9 @@
 #include <Dunjun/common.hpp>
 #include <Dunjun/Image.hpp>
 
+#define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_JPEG
 #include <STB/stb_image.h>
 
 namespace Dunjun {

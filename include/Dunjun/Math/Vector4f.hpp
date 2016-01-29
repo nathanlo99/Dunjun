@@ -2,12 +2,15 @@
 #ifndef DUNJUN_MATH_VECTOR4F_HPP
 #define DUNJUN_MATH_VECTOR4F_HPP
 
+#include <ostream>
+
 namespace Dunjun {
 struct Vector4f {
   Vector4f();
   Vector4f(float x, float y, float z, float w);
   Vector4f(float xy[4]);
   explicit Vector4f(float a);
+  Vector4f(const Vector4f& other) = default;
 
   Vector4f operator+(const Vector4f& other) const;
   Vector4f operator-(const Vector4f& other) const;

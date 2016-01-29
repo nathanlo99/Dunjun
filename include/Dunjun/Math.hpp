@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DUNJUN_MATH_HPP
 #define DUNJUN_MATH_HPP
 
@@ -5,5 +6,6 @@
 #include <Dunjun/Math/Vector3f.hpp>
 #include <Dunjun/Math/Vector4f.hpp>
 #include <Dunjun/Math/Matrix4f.hpp>
+#include <Dunjun/Math/Transform.hpp>
 
 #endif

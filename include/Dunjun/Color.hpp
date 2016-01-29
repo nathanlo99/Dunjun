@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DUNJUN_COLOR_HPP
 #define DUNJUN_COLOR_HPP
 

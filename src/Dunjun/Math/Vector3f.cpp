@@ -55,7 +55,7 @@ Vector3f& Vector3f::operator/=(const float s) {
 float Vector3f::length() const { return std::sqrt(x * x + y * y + z * z); }
 
 float Vector3f::lengthSquared() const { return x * x + y * y + z * z; }
-Vector3f Vector3f::normalized() const { return *this / length(); }
+Vector3f Vector3f::normalize() const { return *this / length(); }
 
 float Vector3f::dot(const Vector3f& v) const {
   return x * v.x + y * v.y + z * v.z;

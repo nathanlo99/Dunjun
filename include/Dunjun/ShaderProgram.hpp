@@ -3,6 +3,10 @@
 #define DUNJUN_SHADERPROGRAM_HPP
 
 #include <Dunjun/common.hpp>
+#include <Dunjun/Math/Vector2f.hpp>
+#include <Dunjun/Math/Vector3f.hpp>
+#include <Dunjun/Math/Vector4f.hpp>
+#include <Dunjun/Math/Matrix4f.hpp>
 #include <Dunjun/NonCopyable.hpp>
 
 namespace Dunjun {
@@ -31,6 +35,10 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   void setUniform(const GLchar* name, int x);
   void setUniform(const GLchar* name, unsigned int x);
   void setUniform(const GLchar* name, bool x);
+  void setUniform(const GLchar* name, Vector2f& v);
+  void setUniform(const GLchar* name, Vector3f& v);
+  void setUniform(const GLchar* name, Vector4f& v);
+  void setUniform(const GLchar* name, Matrix4f& m);
 
   inline GLuint program() const { return m_program; }
   inline const std::string& errorLog() const { return m_errorLog; }

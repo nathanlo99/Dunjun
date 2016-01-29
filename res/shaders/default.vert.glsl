@@ -7,8 +7,10 @@ attribute vec2 v_texCoord;
 varying vec3 f_color;
 varying vec2 f_texCoord;
 
+uniform mat4 u_model;
+
 void main(){
-  gl_Position = vec4(v_position, 0.0, 1.0);
   f_color = v_color;
   f_texCoord = v_texCoord;
+  gl_Position = u_model * vec4(v_position, 0.0, 1.0);
 }

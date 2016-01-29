@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DUNJUN_MATH_MATRIX_HPP
 #define DUNJUN_MATH_MATRIX_HPP
 
@@ -11,6 +12,7 @@ class Matrix4f {
   Matrix4f(float x);
   Matrix4f(const Vector4f& v0, const Vector4f& v1, const Vector4f& v2,
            const Vector4f& v3);
+  Matrix4f(const Matrix4f& other) = default;
 
   Matrix4f operator+(const Matrix4f& other) const;
   Matrix4f operator-(const Matrix4f& other) const;

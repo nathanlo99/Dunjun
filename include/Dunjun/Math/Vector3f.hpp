@@ -2,12 +2,15 @@
 #ifndef DUNJUN_MATH_VECTOR3F_HPP
 #define DUNJUN_MATH_VECTOR3F_HPP
 
+#include <ostream>
+
 namespace Dunjun {
 struct Vector3f {
   Vector3f();
   Vector3f(float x, float y, float z);
   Vector3f(float xy[3]);
   explicit Vector3f(float a);
+  Vector3f(const Vector3f& other) = default;
 
   Vector3f operator+(const Vector3f& other) const;
   Vector3f operator-(const Vector3f& other) const;
@@ -20,7 +23,7 @@ struct Vector3f {
 
   float length() const;
   float lengthSquared() const;
-  Vector3f normalized() const;
+  Vector3f normalize() const;
   float dot(const Vector3f& v) const;
   Vector3f cross(const Vector3f& v) const;
 

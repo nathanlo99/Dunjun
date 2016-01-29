@@ -86,32 +86,59 @@ GLint ShaderProgram::getUniformLocation(const GLchar* name) {
 }
 
 void ShaderProgram::setUniform(const GLchar* name, float x) {
+  use();
   glUniform1f(getUniformLocation(name), x);
 }
 
 void ShaderProgram::setUniform(const GLchar* name, float x, float y) {
+  use();
   glUniform2f(getUniformLocation(name), x, y);
 }
 
 void ShaderProgram::setUniform(const GLchar* name, float x, float y, float z) {
+  use();
   glUniform3f(getUniformLocation(name), x, y, z);
 }
 
 void ShaderProgram::setUniform(const GLchar* name, float x, float y, float z,
                                float w) {
+  use();
   glUniform4f(getUniformLocation(name), x, y, z, w);
 }
 
 void ShaderProgram::setUniform(const GLchar* name, unsigned int x) {
+  use();
   glUniform1i(getUniformLocation(name), x);
 }
 
 void ShaderProgram::setUniform(const GLchar* name, int x) {
+  use();
   glUniform1i(getUniformLocation(name), x);
 }
 
 void ShaderProgram::setUniform(const GLchar* name, bool x) {
+  use();
   glUniform1i(getUniformLocation(name), x);
+}
+
+void ShaderProgram::setUniform(const GLchar* name, Vector2f& v) {
+  use();
+  glUniform2fv(getUniformLocation(name), 1, v.data);
+}
+
+void ShaderProgram::setUniform(const GLchar* name, Vector3f& v) {
+  use();
+  glUniform3fv(getUniformLocation(name), 1, v.data);
+}
+
+void ShaderProgram::setUniform(const GLchar* name, Vector4f& v) {
+  use();
+  glUniform4fv(getUniformLocation(name), 1, v.data);
+}
+
+void ShaderProgram::setUniform(const GLchar* name, Matrix4f& m) {
+  use();
+  glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m[0].data);
 }
 
 } // namespace Dunjun

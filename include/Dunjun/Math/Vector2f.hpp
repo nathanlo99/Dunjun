@@ -2,12 +2,15 @@
 #ifndef DUNJUN_MATH_VECTOR2F_HPP
 #define DUNJUN_MATH_VECTOR2F_HPP
 
+#include <ostream>
+
 namespace Dunjun {
 struct Vector2f {
   Vector2f();
   explicit Vector2f(float a);
   Vector2f(float x, float y);
   Vector2f(float xy[2]);
+  Vector2f(const Vector2f& other) = default;
 
   Vector2f operator+(const Vector2f& other) const;
   Vector2f operator-(const Vector2f& other) const;

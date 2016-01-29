@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <cmath>
 
 #include <Dunjun/common.hpp>
 #include <Dunjun/Color.hpp>
@@ -10,9 +11,9 @@
 
 #include <Dunjun/Math.hpp>
 
-GLOBAL const int g_fpsCap        = 400;
-GLOBAL const int g_windowWidth   = 854;
-GLOBAL const int g_windowHeight  = 480;
+GLOBAL const int g_fpsCap        = 60;
+GLOBAL const int g_windowWidth   = 1000;
+GLOBAL const int g_windowHeight  = 1000;
 GLOBAL const char* g_windowTitle = "Dunjun";
 
 // Uncomment when fullscreen is re-implemented
@@ -146,13 +147,15 @@ int main() {
   Dunjun::TickCounter tc;
   Dunjun::Clock frameClock;
 
+  int c = 0;
+
   // Main loop
   while (!glfwWindowShouldClose(window) && running) {
     // Updates the viewport in case the user resizes the window
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
-    if (tc.update(1.0)) {
+    if (tc.update(2.0)) {
       std::size_t tps   = tc.tickRate();
       std::string title = std::string(g_windowTitle) + " | " +
                           std::to_string(tps) + " TPS | " +
@@ -160,6 +163,12 @@ int main() {
       std::cout << title << std::endl;
       glfwSetWindowTitle(window, title.c_str());
     }
+    c++;
+    Dunjun::Matrix4f m =
+        Dunjun::translate({sinf(c / 100.) / 2, cosf(c / 100.) / 2, 1}) *
+        Dunjun::rotate(c / 100.0, {0, 0, -1}) * Dunjun::scale({1, 1, 1});
+    shader.setUniform("u_model", m);
+    shader.use();
     render();
     glfwSwapBuffers(window);
     handleInput(window, running, fullscreen);
