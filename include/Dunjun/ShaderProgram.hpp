@@ -2,6 +2,9 @@
 #ifndef DUNJUN_SHADERPROGRAM_HPP
 #define DUNJUN_SHADERPROGRAM_HPP
 
+#include <string>
+#include <map>
+
 #include <Dunjun/common.hpp>
 #include <Dunjun/Math/Vector2f.hpp>
 #include <Dunjun/Math/Vector3f.hpp>
@@ -20,11 +23,9 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
 
   void use() const;
   void stopUsing() const;
-
   void link();
 
   void bindAttribLocation(GLuint location, const GLchar* name);
-
   GLint getAttribLocation(const GLchar* name);
   GLint getUniformLocation(const GLchar* name);
 
@@ -46,6 +47,9 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   private:
   GLuint m_program = glCreateProgram();
   std::string m_errorLog;
+
+  std::map< std::string, GLint > m_uniformLocations;
+  std::map< std::string, GLint > m_attribLocations;
 };
 
 } // namespace Dunjun

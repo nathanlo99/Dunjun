@@ -12,6 +12,7 @@
 #include <sstream>
 #include <cstring>
 #include <cstddef>
+#include <limits>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -20,6 +21,8 @@
 
 #include <Dunjun/types.hpp>
 
-namespace Dunjun {} // namespace Dunjun
+// Constant literals
+GLOBAL const float F_EPSILON  = std::numeric_limits< float >::epsilon();
+GLOBAL const double D_EPSILON = std::numeric_limits< double >::epsilon();
 
 #endif

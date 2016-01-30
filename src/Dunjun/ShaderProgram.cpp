@@ -75,14 +75,29 @@ void ShaderProgram::link() {
 
 void ShaderProgram::bindAttribLocation(GLuint location, const GLchar* name) {
   glBindAttribLocation(m_program, location, name);
+  m_attribLocations[std::string(name)] = location;
 }
 
 GLint ShaderProgram::getAttribLocation(const GLchar* name) {
-  return glGetAttribLocation(m_program, name);
+  std::string str_name = std::string(name);
+  auto found = m_attribLocations.find(str_name);
+  if (found != m_attribLocations.end()) return found->second;
+  GLint loc = glGetAttribLocation(m_program, name);
+  if (loc == -1)
+    throw std::runtime_error(std::string("Could not find attribute: ") +
+                             str_name);
+  return m_attribLocations[str_name] = loc;
 }
 
 GLint ShaderProgram::getUniformLocation(const GLchar* name) {
-  return glGetUniformLocation(m_program, name);
+  std::string str_name = std::string(name);
+  auto found = m_uniformLocations.find(str_name);
+  if (found != m_uniformLocations.end()) return found->second;
+  GLint loc = glGetUniformLocation(m_program, name);
+  if (loc == -1)
+    throw std::runtime_error(std::string("Could not find uniform: ") +
+                             str_name);
+  return m_uniformLocations[str_name] = loc;
 }
 
 void ShaderProgram::setUniform(const GLchar* name, float x) {

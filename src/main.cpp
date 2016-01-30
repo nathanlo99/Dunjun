@@ -116,11 +116,11 @@ int main() {
 
   // Vertices in CCW Order
   Vertex vertices[] = {
-      //    x      y      r    g    b    a       u     v
-      {{+0.5f, +0.5f}, {255, 255, 255, 255}, {1.0f, 1.0f}}, // Vertex 0
-      {{-0.5f, +0.5f}, {000, 000, 255, 255}, {0.0f, 1.0f}}, // Vertex 1
-      {{+0.5f, -0.5f}, {000, 255, 000, 255}, {1.0f, 0.0f}}, // Vertex 2
-      {{-0.5f, -0.5f}, {255, 000, 000, 255}, {0.0f, 0.0f}}, // Vertex 3
+      //    x      y       r     g     b     a       u     v
+      {{+0.5f, +0.5f}, {0xFF, 0xFF, 0xFF, 0xFF}, {1.0f, 1.0f}}, // Vertex 0
+      {{-0.5f, +0.5f}, {0x00, 0x00, 0xFF, 0xFF}, {0.0f, 1.0f}}, // Vertex 1
+      {{+0.5f, -0.5f}, {0x00, 0xFF, 0x00, 0xFF}, {1.0f, 0.0f}}, // Vertex 2
+      {{-0.5f, -0.5f}, {0xFF, 0x00, 0x00, 0xFF}, {0.0f, 0.0f}}, // Vertex 3
   };
 
   // Initialize Vertex Buffer Object and shader program
@@ -167,9 +167,8 @@ int main() {
         Dunjun::rotate(glfwGetTime() * 60, true, {0, 1, 0});
     Dunjun::Matrix4f view = Dunjun::lookAt({1, 1, 1}, {0, 0, 0}, {0, 1, 0});
 
-    const float aspect = (float)g_windowWidth / (float)g_windowHeight;
-
-    Dunjun::Matrix4f projection = Dunjun::perspective(70, true, aspect, 0.1f);
+    Dunjun::Matrix4f projection = Dunjun::perspective(
+        70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
 
     Dunjun::Matrix4f camera = projection * view;
     shader.setUniform("u_model", model);
