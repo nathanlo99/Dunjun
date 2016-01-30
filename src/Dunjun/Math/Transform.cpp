@@ -12,7 +12,10 @@ Matrix4f translate(const Vector3f& v) {
   return m;
 }
 
-Matrix4f rotate(float angle, const Vector3f& v) {
+Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
+
+  if (degrees) angle *= M_PI / 180;
+
   const float c = cosf(angle);
   const float s = sinf(angle);
 
@@ -43,6 +46,84 @@ Matrix4f scale(const Vector3f& v) {
   result[0][0] = v[0];
   result[1][1] = v[1];
   result[2][2] = v[2];
+  return result;
+}
+
+Matrix4f ortho(float left, float right, float bottom, float top) {
+  Matrix4f result;
+  result[0][0] = 2.0f / (right - left);
+  result[1][1] = 2.0f / (top - bottom);
+  result[2][2] = -1.0f;
+  result[3][0] = (left + right) / (left - right);
+  result[3][1] = (bottom + top) / (bottom - top);
+  return result;
+}
+
+Matrix4f ortho(float left, float right, float bottom, float top, float zNear,
+               float zFar) {
+  Matrix4f result;
+  result[0][0] = 2.0f / (right - left);
+  result[1][1] = 2.0f / (top - bottom);
+  result[2][2] = 2.0f / (zNear - zFar);
+  result[3][0] = (left + right) / (left - right);
+  result[3][1] = (bottom + top) / (bottom - top);
+  result[3][2] = (zFar + zNear) / (zNear - zFar);
+  return result;
+}
+
+Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
+                     float zFar) {
+  if (degrees) fov *= M_PI / 180;
+  const float tanHalfFOV = tanf(fov / 2.0f);
+
+  Matrix4f result(0.0f);
+  result[0][0] = 1.0f / (aspect * tanHalfFOV);
+  result[1][1] = 1.0f / (tanHalfFOV);
+  result[2][2] = -(zFar + zNear) / (zFar - zNear);
+  result[2][3] = -1.0f;
+  result[3][2] = 2.0f * zFar * zNear / (zNear - zFar);
+
+  return result;
+}
+
+Matrix4f perspective(float fov, bool degrees, float aspect, float zNear) {
+  if (degrees) fov *= M_PI / 180;
+  const float tanHalfFOV = tanf(fov / 2.0f);
+
+  Matrix4f result(0.0f);
+  result[0][0] = 1.0f / (tanHalfFOV * aspect);
+  result[1][1] = 1.0f / tanHalfFOV;
+  result[2][2] = -1.0f;
+  result[2][3] = -1.0f;
+  result[3][2] = -2.0f * zNear;
+
+  return result;
+}
+
+Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
+                const Vector3f& up) {
+
+  const Vector3f f = (center - eye).normalize();
+  const Vector3f s = f.cross(up).normalize();
+  const Vector3f u = s.cross(f);
+
+  Matrix4f result;
+  result[0][0] = s.x;
+  result[1][0] = s.y;
+  result[2][0] = s.z;
+
+  result[0][1] = u.x;
+  result[1][1] = u.y;
+  result[2][1] = u.z;
+
+  result[0][2] = -f.x;
+  result[1][2] = -f.y;
+  result[2][2] = -f.z;
+
+  result[3][0] = -eye.dot(s);
+  result[3][1] = -eye.dot(u);
+  result[3][2] = eye.dot(f);
+
   return result;
 }
 

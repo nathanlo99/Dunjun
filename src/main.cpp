@@ -1,4 +1,3 @@
-#include <unistd.h>
 #include <cmath>
 
 #include <Dunjun/common.hpp>
@@ -11,9 +10,10 @@
 
 #include <Dunjun/Math.hpp>
 
-GLOBAL const int g_fpsCap        = 60;
-GLOBAL const int g_windowWidth   = 1000;
-GLOBAL const int g_windowHeight  = 1000;
+GLOBAL const int g_fpsCap = 1200; // Basically unreachable
+GLOBAL int g_windowWidth  = 800;
+GLOBAL int g_windowHeight = 600;
+
 GLOBAL const char* g_windowTitle = "Dunjun";
 
 // Uncomment when fullscreen is re-implemented
@@ -53,6 +53,8 @@ INTERNAL void handleInput(GLFWwindow* window, bool& running, bool& fullscreen) {
 
   // Exit if ESCAPE is pressed
   if (glfwGetKey(window, GLFW_KEY_ESCAPE)) running = false;
+
+  fullscreen = fullscreen; // To stop 'unused' warnings until fullscreen fixed
 
   // Toggle fullscreen if F11 is pressed (Disabled until later fix)
   // if (glfwGetKey(window, GLFW_KEY_F11)) {
@@ -100,8 +102,8 @@ int main() {
     throw std::runtime_error("Could not initialize GLEW");
 
   // Enables face-culling
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
+  // glEnable(GL_CULL_FACE);
+  // glCullFace(GL_BACK);
 
   // Detects the primary monitor's screen width and height (Disabled until
   // fullscreen is fixed)
@@ -147,33 +149,38 @@ int main() {
   Dunjun::TickCounter tc;
   Dunjun::Clock frameClock;
 
-  int c = 0;
-
   // Main loop
   while (!glfwWindowShouldClose(window) && running) {
     // Updates the viewport in case the user resizes the window
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
-    glViewport(0, 0, width, height);
-    if (tc.update(2.0)) {
+    glfwGetWindowSize(window, &g_windowWidth, &g_windowHeight);
+    glViewport(0, 0, g_windowWidth, g_windowHeight);
+    if (tc.update(1.0)) {
       std::size_t tps   = tc.tickRate();
       std::string title = std::string(g_windowTitle) + " | " +
-                          std::to_string(tps) + " TPS | " +
+                          std::to_string(tps) + " FPS | " +
                           std::to_string(1000. / tps) + " MS/F";
       std::cout << title << std::endl;
       glfwSetWindowTitle(window, title.c_str());
     }
-    c++;
-    Dunjun::Matrix4f m =
-        Dunjun::translate({sinf(c / 100.) / 2, cosf(c / 100.) / 2, 1}) *
-        Dunjun::rotate(c / 100.0, {0, 0, -1}) * Dunjun::scale({1, 1, 1});
-    shader.setUniform("u_model", m);
+
+    Dunjun::Matrix4f model =
+        Dunjun::rotate(glfwGetTime() * 60, true, {0, 1, 0});
+    Dunjun::Matrix4f view = Dunjun::lookAt({1, 1, 1}, {0, 0, 0}, {0, 1, 0});
+
+    const float aspect = (float)g_windowWidth / (float)g_windowHeight;
+
+    Dunjun::Matrix4f projection = Dunjun::perspective(70, true, aspect, 0.1f);
+
+    Dunjun::Matrix4f camera = projection * view;
+    shader.setUniform("u_model", model);
+    shader.setUniform("u_camera", camera);
     shader.use();
     render();
     glfwSwapBuffers(window);
     handleInput(window, running, fullscreen);
 
-    while (frameClock.getElapsedTime() < 1 / (double)g_fpsCap) usleep(10);
+    while (frameClock.getElapsedTime() < 1 / (double)g_fpsCap)
+      ;
     frameClock.reset();
   }
 

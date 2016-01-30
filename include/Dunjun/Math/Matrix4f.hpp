@@ -37,6 +37,9 @@ class Matrix4f {
   Vector4f m[4];
 };
 
+Matrix4f operator*(float s, const Matrix4f& m);
+std::ostream& operator<<(std::ostream& os, const Matrix4f& m);
+
 } // namespace Dunjun
 
 #endif
