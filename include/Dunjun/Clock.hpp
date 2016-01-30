@@ -7,9 +7,9 @@
 namespace Dunjun {
 class Clock {
   public:
-  double getElapsedTime() const { return glfwGetTime() - m_startTime; }
-  void reset() { m_startTime = glfwGetTime(); }
-  double restart() {
+  inline double getElapsedTime() const { return glfwGetTime() - m_startTime; }
+  inline void reset() { m_startTime = glfwGetTime(); }
+  inline double restart() {
     double now     = glfwGetTime();
     double elapsed = now - m_startTime;
     m_startTime    = now;

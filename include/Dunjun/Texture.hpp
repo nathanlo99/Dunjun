@@ -10,16 +10,16 @@ namespace Dunjun {
 
 class Texture : public NonCopyable {
   public:
-  Texture(const Image& image, GLint minMagFilter = GL_LINEAR,
-          GLint wrapMode = GL_CLAMP_TO_EDGE);
-  Texture(const char* fileName, GLint minMagFilter = GL_LINEAR,
-          GLint wrapMode = GL_CLAMP_TO_EDGE);
+  Texture(const Image& image, const GLint minMagFilter = GL_LINEAR,
+          const GLint wrapMode = GL_CLAMP_TO_EDGE);
+  Texture(const char* fileName, const GLint minMagFilter = GL_LINEAR,
+          const GLint wrapMode = GL_CLAMP_TO_EDGE);
   virtual ~Texture();
 
-  void loadFromImage(const Image& image, GLint minMagFilter = GL_LINEAR,
-                     GLint wrapMode = GL_CLAMP_TO_EDGE);
+  void loadFromImage(const Image& image, const GLint minMagFilter = GL_LINEAR,
+                     const GLint wrapMode = GL_CLAMP_TO_EDGE);
 
-  void bind(GLuint position);
+  void bind(const GLuint position) const;
 
   inline GLuint texture() const { return m_texture; }
   inline GLsizei width() const { return m_width; }

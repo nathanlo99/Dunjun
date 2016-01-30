@@ -7,10 +7,8 @@
 namespace Dunjun {
 struct Vector2f {
   Vector2f();
-  explicit Vector2f(float a);
-  Vector2f(float x, float y);
-  Vector2f(float xy[2]);
-  Vector2f(const Vector2f& other) = default;
+  Vector2f(const float x, const float y);
+  Vector2f(const float xy[2]);
 
   Vector2f operator+(const Vector2f& other) const;
   Vector2f operator-(const Vector2f& other) const;
@@ -21,17 +19,17 @@ struct Vector2f {
   Vector2f operator/(const float s) const;
   Vector2f& operator/=(const float s);
 
-  float length();
-  float lengthSquared();
-  Vector2f normalized();
+  float length() const;
+  float lengthSquared() const;
+  Vector2f normalize() const;
   float dot(const Vector2f& v) const;
   float cross(const Vector2f& v) const;
 
   bool operator==(const Vector2f& other) const;
   bool operator!=(const Vector2f& other) const;
 
-  float& operator[](int index) { return data[index]; }
-  const float& operator[](int index) const { return data[index]; }
+  inline float& operator[](const int index) { return data[index]; }
+  inline const float& operator[](const int index) const { return data[index]; }
 
   union {
     float data[2];

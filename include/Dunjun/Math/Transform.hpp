@@ -6,6 +6,7 @@
 #include <Dunjun/Math/Matrix4f.hpp>
 
 namespace Dunjun {
+Matrix4f identity();
 
 Matrix4f translate(const Vector3f& v);
 Matrix4f rotate(float angle, bool degrees, const Vector3f& v);

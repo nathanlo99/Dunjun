@@ -2,33 +2,35 @@
 
 namespace Dunjun {
 
-INTERNAL GLenum getFormat(u32 format, bool srgb) {
+INTERNAL GLenum getFormat(const ImageFormat format, const bool srgb) {
   switch (format) {
-  case 1:
+  case ImageFormat::GREYSCALE:
     return GL_LUMINANCE;
-  case 2:
+  case ImageFormat::GREYSCALE_ALPHA:
     return GL_LUMINANCE_ALPHA;
-  case 3:
+  case ImageFormat::RGB:
     return srgb ? GL_SRGB : GL_RGB;
-  case 4:
+  case ImageFormat::RGBA:
     return srgb ? GL_SRGB_ALPHA : GL_RGBA;
   default:
     throw std::runtime_error("Invalid format");
   }
 }
 
-Texture::Texture(const Image& image, GLint minMagFilter, GLint wrapMode) {
+Texture::Texture(const Image& image, const GLint minMagFilter,
+                 const GLint wrapMode) {
   loadFromImage(image, minMagFilter, wrapMode);
 }
 
-Texture::Texture(const char* fileName, GLint minMagFilter, GLint wrapMode) {
+Texture::Texture(const char* fileName, const GLint minMagFilter,
+                 const GLint wrapMode) {
   Image image(fileName);
   image.flipVertically();
   loadFromImage(image, minMagFilter, wrapMode);
 }
 
-void Texture::loadFromImage(const Image& image, GLint minMagFilter,
-                            GLint wrapMode) {
+void Texture::loadFromImage(const Image& image, const GLint minMagFilter,
+                            const GLint wrapMode) {
   m_width  = (GLsizei)image.width();
   m_height = (GLsizei)image.height();
 
@@ -47,7 +49,7 @@ void Texture::loadFromImage(const Image& image, GLint minMagFilter,
 
 Texture::~Texture() { glDeleteTextures(1, &m_texture); }
 
-void Texture::bind(GLuint position) {
+void Texture::bind(const GLuint position) const {
   if (position > 31) {
     std::cerr << "Texture position too high: " << position << std::endl;
     std::cerr << "Binding to position [31] instead" << std::endl;

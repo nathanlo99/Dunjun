@@ -4,9 +4,9 @@
 
 namespace Dunjun {
 Vector3f::Vector3f() : x(0), y(0), z(0) {}
-Vector3f::Vector3f(float x, float y, float z) : x(x), y(y), z(z) {}
-Vector3f::Vector3f(float xy[3]) : x(xy[0]), y(xy[1]), z(xy[2]) {}
-Vector3f::Vector3f(float a) : x(a), y(a), z(a) {}
+Vector3f::Vector3f(const float x, const float y, const float z)
+: x(x), y(y), z(z) {}
+Vector3f::Vector3f(const float xy[3]) : x(xy[0]), y(xy[1]), z(xy[2]) {}
 
 Vector3f Vector3f::operator+(const Vector3f& other) const {
   return Vector3f(x + other.x, y + other.y, z + other.z);
@@ -52,7 +52,7 @@ Vector3f& Vector3f::operator/=(const float s) {
   return *this;
 }
 
-float Vector3f::length() const { return std::sqrt(x * x + y * y + z * z); }
+float Vector3f::length() const { return sqrtf(x * x + y * y + z * z); }
 
 float Vector3f::lengthSquared() const { return x * x + y * y + z * z; }
 Vector3f Vector3f::normalize() const { return *this / length(); }

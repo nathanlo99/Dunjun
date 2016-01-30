@@ -4,7 +4,7 @@ FLAGS = -pipe -std=c++14 -Ofast \
 	-I include \
 	-Llibs -lglfw3 -lGLEW \
 	-framework OpenGL
-WARNINGS = -Wall -Wextra
+WARNINGS = -Wall -Wextra -Wno-unused
 EXEC = main
 
 .PHONY: bin/main.o

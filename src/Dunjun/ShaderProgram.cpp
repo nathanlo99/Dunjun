@@ -56,8 +56,7 @@ void ShaderProgram::attachShaderFromMemory(GLuint type,
 void ShaderProgram::use() const { glUseProgram(m_program); }
 void ShaderProgram::stopUsing() const { glUseProgram(0); }
 
-void ShaderProgram::link() {
-  if (!m_program) m_program = glCreateProgram();
+void ShaderProgram::link() const {
   glLinkProgram(m_program);
   GLint success;
   glGetProgramiv(m_program, GL_LINK_STATUS, &success);
@@ -69,7 +68,6 @@ void ShaderProgram::link() {
     throw std::runtime_error(std::string("LINK ") + log);
     delete[] log;
     glDeleteProgram(m_program);
-    m_program = 0;
   }
 }
 
@@ -136,22 +134,22 @@ void ShaderProgram::setUniform(const GLchar* name, bool x) {
   glUniform1i(getUniformLocation(name), x);
 }
 
-void ShaderProgram::setUniform(const GLchar* name, Vector2f& v) {
+void ShaderProgram::setUniform(const GLchar* name, const Vector2f& v) {
   use();
   glUniform2fv(getUniformLocation(name), 1, v.data);
 }
 
-void ShaderProgram::setUniform(const GLchar* name, Vector3f& v) {
+void ShaderProgram::setUniform(const GLchar* name, const Vector3f& v) {
   use();
   glUniform3fv(getUniformLocation(name), 1, v.data);
 }
 
-void ShaderProgram::setUniform(const GLchar* name, Vector4f& v) {
+void ShaderProgram::setUniform(const GLchar* name, const Vector4f& v) {
   use();
   glUniform4fv(getUniformLocation(name), 1, v.data);
 }
 
-void ShaderProgram::setUniform(const GLchar* name, Matrix4f& m) {
+void ShaderProgram::setUniform(const GLchar* name, const Matrix4f& m) {
   use();
   glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m[0].data);
 }

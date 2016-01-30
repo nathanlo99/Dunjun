@@ -3,10 +3,7 @@
 namespace Dunjun {
 
 Matrix4f::Matrix4f()
-: m({{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}) {}
-
-Matrix4f::Matrix4f(float x)
-: m({{x, 0, 0, 0}, {0, x, 0, 0}, {0, 0, x, 0}, {0, 0, 0, x}}) {}
+: m({{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}) {}
 
 Matrix4f::Matrix4f(const Vector4f& v0, const Vector4f& v1, const Vector4f& v2,
                    const Vector4f& v3)
@@ -22,11 +19,11 @@ Matrix4f Matrix4f::operator-(const Matrix4f& other) const {
                   m[3] - other[3]);
 }
 
-Matrix4f Matrix4f::operator*(float s) const {
+Matrix4f Matrix4f::operator*(const float s) const {
   return Matrix4f(m[0] * s, m[1] * s, m[2] * s, m[3] * s);
 }
 
-Matrix4f Matrix4f::operator/(float s) const {
+Matrix4f Matrix4f::operator/(const float s) const {
   return Matrix4f(m[0] / s, m[1] / s, m[2] / s, m[3] / s);
 }
 
@@ -167,7 +164,7 @@ Matrix4f Matrix4f::inverse() const {
   return inv / det;
 }
 
-bool Matrix4f::operator==(const Matrix4f& other) {
+bool Matrix4f::operator==(const Matrix4f& other) const {
   if (m[0] != other[0]) return false;
   if (m[1] != other[1]) return false;
   if (m[2] != other[2]) return false;
@@ -175,9 +172,11 @@ bool Matrix4f::operator==(const Matrix4f& other) {
   return true;
 }
 
-bool Matrix4f::operator!=(const Matrix4f& other) { return !(*this == other); }
+bool Matrix4f::operator!=(const Matrix4f& other) const {
+  return !(*this == other);
+}
 
-Matrix4f operator*(float s, const Matrix4f& m) { return m * s; }
+Matrix4f operator*(const float s, const Matrix4f& m) { return m * s; }
 
 std::ostream& operator<<(std::ostream& os, const Matrix4f& m) {
   return os << "Matrix4f("

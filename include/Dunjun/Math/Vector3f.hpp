@@ -7,10 +7,8 @@
 namespace Dunjun {
 struct Vector3f {
   Vector3f();
-  Vector3f(float x, float y, float z);
-  Vector3f(float xy[3]);
-  explicit Vector3f(float a);
-  Vector3f(const Vector3f& other) = default;
+  Vector3f(const float x, const float y, const float z);
+  Vector3f(const float xy[3]);
 
   Vector3f operator+(const Vector3f& other) const;
   Vector3f operator-(const Vector3f& other) const;
@@ -30,8 +28,8 @@ struct Vector3f {
   bool operator==(const Vector3f& other) const;
   bool operator!=(const Vector3f& other) const;
 
-  float& operator[](int index) { return data[index]; }
-  const float& operator[](int index) const { return data[index]; }
+  inline float& operator[](const int index) { return data[index]; }
+  inline const float& operator[](const int index) const { return data[index]; }
 
   union {
     float data[3];

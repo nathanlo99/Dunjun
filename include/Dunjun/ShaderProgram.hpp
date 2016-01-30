@@ -18,38 +18,38 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   ShaderProgram();
   virtual ~ShaderProgram();
 
-  void attachShaderFromFile(GLuint type, const std::string& fileName);
-  void attachShaderFromMemory(GLuint type, const std::string& fileName);
+  void attachShaderFromFile(const GLuint type, const std::string& fileName);
+  void attachShaderFromMemory(const GLuint type, const std::string& fileName);
 
   void use() const;
   void stopUsing() const;
-  void link();
+  void link() const;
 
-  void bindAttribLocation(GLuint location, const GLchar* name);
+  void bindAttribLocation(const GLuint location, const GLchar* name);
   GLint getAttribLocation(const GLchar* name);
   GLint getUniformLocation(const GLchar* name);
 
-  void setUniform(const GLchar* name, float x);
-  void setUniform(const GLchar* name, float x, float y);
-  void setUniform(const GLchar* name, float x, float y, float z);
-  void setUniform(const GLchar* name, float x, float y, float z, float w);
-  void setUniform(const GLchar* name, int x);
-  void setUniform(const GLchar* name, unsigned int x);
-  void setUniform(const GLchar* name, bool x);
-  void setUniform(const GLchar* name, Vector2f& v);
-  void setUniform(const GLchar* name, Vector3f& v);
-  void setUniform(const GLchar* name, Vector4f& v);
-  void setUniform(const GLchar* name, Matrix4f& m);
+  void setUniform(const GLchar* name, const float x);
+  void setUniform(const GLchar* name, const float x, const float y);
+  void setUniform(const GLchar* name, const float x, const float y,
+                  const float z);
+  void setUniform(const GLchar* name, const float x, const float y,
+                  const float z, const float w);
+  void setUniform(const GLchar* name, const int x);
+  void setUniform(const GLchar* name, const unsigned int x);
+  void setUniform(const GLchar* name, const bool x);
+  void setUniform(const GLchar* name, const Vector2f& v);
+  void setUniform(const GLchar* name, const Vector3f& v);
+  void setUniform(const GLchar* name, const Vector4f& v);
+  void setUniform(const GLchar* name, const Matrix4f& m);
 
   inline GLuint program() const { return m_program; }
-  inline const std::string& errorLog() const { return m_errorLog; }
 
   private:
   GLuint m_program = glCreateProgram();
-  std::string m_errorLog;
 
-  std::map< std::string, GLint > m_uniformLocations;
-  std::map< std::string, GLint > m_attribLocations;
+  std::map<std::string, GLint> m_uniformLocations;
+  std::map<std::string, GLint> m_attribLocations;
 };
 
 } // namespace Dunjun

@@ -8,7 +8,7 @@
 namespace Dunjun {
 class TickCounter {
   public:
-  bool update(double frequency) {
+  inline bool update(double frequency) {
     bool reset = false;
     if (m_clock.getElapsedTime() >= frequency) {
       m_tickRate = m_ticks / frequency;

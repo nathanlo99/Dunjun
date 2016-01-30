@@ -15,11 +15,12 @@ Image::Image(const char* fileName) {
   m_pixels   = nullptr;
   u8* pixels = stbi_load(fileName, &width, &height, &format, 0);
   if (!pixels) throw std::runtime_error(stbi_failure_reason());
-  loadFromMemory(width, height, format, pixels);
+  loadFromMemory(width, height, (ImageFormat)format, pixels);
   stbi_image_free(pixels);
 }
 
-Image::Image(u32 width, u32 height, u32 format, const u8* pixels) {
+Image::Image(const u32 width, const u32 height, const ImageFormat format,
+             const u8* pixels) {
   loadFromMemory(width, height, format, pixels);
 }
 
@@ -40,19 +41,19 @@ void Image::loadFromFile(const char* fileName) {
   int width, height, format;
   u8* pixels = stbi_load(fileName, &width, &height, &format, 0);
   if (!pixels) throw std::runtime_error(stbi_failure_reason());
-  loadFromMemory(width, height, format, pixels);
+  loadFromMemory(width, height, (ImageFormat)format, pixels);
   stbi_image_free(pixels);
 }
 
-void Image::loadFromMemory(u32 w, u32 h, u32 f, const u8* pixels) {
+void Image::loadFromMemory(const u32 w, const u32 h, const ImageFormat f,
+                           const u8* pixels) {
   if (w == 0) throw std::runtime_error("Image has 0 width");
   if (h == 0) throw std::runtime_error("Image has 0 height");
-  if (f <= 0 || f >= 4) throw std::runtime_error("Invalid Image Format");
 
-  m_width               = w;
-  m_height              = h;
-  m_format              = f;
-  std::size_t imageSize = w * h * f;
+  m_width       = w;
+  m_height      = h;
+  m_format      = f;
+  u32 imageSize = w * h * (u32)f;
 
   if (m_pixels) delete[] m_pixels;
   m_pixels = new u8[imageSize];
@@ -60,7 +61,7 @@ void Image::loadFromMemory(u32 w, u32 h, u32 f, const u8* pixels) {
 }
 
 void Image::flipVertically() {
-  std::size_t pitch = m_width * m_format;
+  std::size_t pitch = m_width * (u32)m_format;
   u32 halfRows      = m_height / 2;
   u8* rowBuffer = new u8[pitch];
   for (u32 i = 0; i < halfRows; i++) {
@@ -75,20 +76,21 @@ void Image::flipVertically() {
 
 void Image::rotateCCW() { return; }
 
-void Image::copyRectFromImage(const Image& src, u32 sc, u32 sr, u32 tc, u32 tr,
-                              u32 w, u32 h) {
+void Image::copyRectFromImage(const Image& src, const u32 sc, const u32 sr,
+                              const u32 tc, const u32 tr, const u32 w,
+                              const u32 h) {
   return;
 }
 
-u8* Image::getPixel(u32 c, u32 r) const {
+u8* Image::getPixel(const u32 c, const u32 r) const {
   if (c >= m_width || r >= m_height) return nullptr;
-  return m_pixels + (r * m_width + c) * m_format;
+  return m_pixels + (r * m_width + c) * (u32)m_format;
 }
 
-void Image::setPixel(u32 c, u32 r, const u32* pixel) {
+void Image::setPixel(const u32 c, const u32 r, const u32* pixel) {
   if (c >= m_width || r >= m_height) return;
   u8* p = getPixel(c, r);
-  memcpy(p, pixel, m_format);
+  memcpy(p, pixel, (u32)m_format);
 }
 
 } // namespace Dunjun

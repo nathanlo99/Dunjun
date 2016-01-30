@@ -7,10 +7,8 @@
 namespace Dunjun {
 struct Vector4f {
   Vector4f();
-  Vector4f(float x, float y, float z, float w);
-  Vector4f(float xy[4]);
-  explicit Vector4f(float a);
-  Vector4f(const Vector4f& other) = default;
+  Vector4f(const float x, const float y, const float z, const float w);
+  Vector4f(const float xy[4]);
 
   Vector4f operator+(const Vector4f& other) const;
   Vector4f operator-(const Vector4f& other) const;
@@ -23,14 +21,14 @@ struct Vector4f {
 
   float length() const;
   float lengthSquared() const;
-  Vector4f normalized() const;
+  Vector4f normalize() const;
   float dot(const Vector4f& v) const;
 
   bool operator==(const Vector4f& other) const;
   bool operator!=(const Vector4f& other) const;
 
-  float& operator[](int index) { return data[index]; }
-  const float& operator[](int index) const { return data[index]; }
+  float& operator[](const int index) { return data[index]; }
+  const float& operator[](const int index) const { return data[index]; }
 
   union {
     float data[4];

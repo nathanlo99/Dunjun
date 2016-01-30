@@ -6,9 +6,21 @@
 
 namespace Dunjun {
 
+Matrix4f identity() {
+  Matrix4f m;
+  m[0][0] = 1;
+  m[1][1] = 1;
+  m[2][2] = 1;
+  m[3][3] = 1;
+  return m;
+}
+
 Matrix4f translate(const Vector3f& v) {
   Matrix4f m;
-  m[3] = Vector4f(v[0], v[1], v[2], 1);
+  m[0][0] = 1.0f;
+  m[1][1] = 1.0f;
+  m[2][2] = 1.0f;
+  m[3]    = Vector4f(v[0], v[1], v[2], 1);
   return m;
 }
 
@@ -46,6 +58,7 @@ Matrix4f scale(const Vector3f& v) {
   result[0][0] = v[0];
   result[1][1] = v[1];
   result[2][2] = v[2];
+  result[3][3] = 1.0f;
   return result;
 }
 
@@ -56,6 +69,7 @@ Matrix4f ortho(float left, float right, float bottom, float top) {
   result[2][2] = -1.0f;
   result[3][0] = (left + right) / (left - right);
   result[3][1] = (bottom + top) / (bottom - top);
+  result[3][3] = 1.0f;
   return result;
 }
 
@@ -68,6 +82,7 @@ Matrix4f ortho(float left, float right, float bottom, float top, float zNear,
   result[3][0] = (left + right) / (left - right);
   result[3][1] = (bottom + top) / (bottom - top);
   result[3][2] = (zFar + zNear) / (zNear - zFar);
+  result[3][3] = 1.0f;
   return result;
 }
 
@@ -76,7 +91,7 @@ Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
   if (degrees) fov *= M_PI / 180;
   const float tanHalfFOV = tanf(fov / 2.0f);
 
-  Matrix4f result(0.0f);
+  Matrix4f result;
   result[0][0] = 1.0f / (aspect * tanHalfFOV);
   result[1][1] = 1.0f / (tanHalfFOV);
   result[2][2] = -(zFar + zNear) / (zFar - zNear);
@@ -90,13 +105,12 @@ Matrix4f perspective(float fov, bool degrees, float aspect, float zNear) {
   if (degrees) fov *= M_PI / 180;
   const float tanHalfFOV = tanf(fov / 2.0f);
 
-  Matrix4f result(0.0f);
+  Matrix4f result;
   result[0][0] = 1.0f / (tanHalfFOV * aspect);
   result[1][1] = 1.0f / tanHalfFOV;
   result[2][2] = -1.0f;
   result[2][3] = -1.0f;
   result[3][2] = -2.0f * zNear;
-
   return result;
 }
 
@@ -108,6 +122,7 @@ Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
   const Vector3f u = s.cross(f);
 
   Matrix4f result;
+
   result[0][0] = s.x;
   result[1][0] = s.y;
   result[2][0] = s.z;
@@ -123,6 +138,7 @@ Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
   result[3][0] = -eye.dot(s);
   result[3][1] = -eye.dot(u);
   result[3][2] = eye.dot(f);
+  result[3][3] = 1;
 
   return result;
 }

@@ -6,9 +6,8 @@
 namespace Dunjun {
 
 Vector2f::Vector2f() : x(0), y(0) {}
-Vector2f::Vector2f(float a) : x(a), y(a) {}
-Vector2f::Vector2f(float x, float y) : x(x), y(y) {}
-Vector2f::Vector2f(float xy[2]) : x(xy[0]), y(xy[1]) {}
+Vector2f::Vector2f(const float x, const float y) : x(x), y(y) {}
+Vector2f::Vector2f(const float xy[2]) : x(xy[0]), y(xy[1]) {}
 
 Vector2f Vector2f::operator+(const Vector2f& other) const {
   return Vector2f(x + other.x, y + other.y);
@@ -50,9 +49,9 @@ Vector2f& Vector2f::operator/=(const float s) {
   return *this;
 }
 
-float Vector2f::length() { return std::sqrt(x * x + y * y); }
-float Vector2f::lengthSquared() { return x * x + y * y; }
-Vector2f Vector2f::normalized() { return *this / length(); }
+float Vector2f::length() const { return sqrtf(x * x + y * y); }
+float Vector2f::lengthSquared() const { return x * x + y * y; }
+Vector2f Vector2f::normalize() const { return *this / length(); }
 float Vector2f::dot(const Vector2f& v) const { return x * v.x + y * v.y; }
 float Vector2f::cross(const Vector2f& v) const { return x * v.y - y * v.x; }
 

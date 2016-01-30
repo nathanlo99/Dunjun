@@ -19,3 +19,4 @@ Episode List
 * [013 - Matrix Transforms](https://youtu.be/WEpA4NbN-xQ)
 * [014 - View and Projection Matrices](https://youtu.be/QAIbGN_oXdo)
 * [015 - Cleanup, GLSL Convention](https://youtu.be/hQw7_DWjQtg)
+* [016 - ModelAssets and ModelInstances](https://youtu.be/oDwALlxMa4k)
