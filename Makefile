@@ -10,6 +10,7 @@ EXEC = main
 .PHONY: bin/main.o
 
 all: $(EXEC)
+	@echo Built!
 
 debug: $(EXEC)
 	gdb -ex "set environment MALLOC_CHECK_ 2" -ex "start" $(EXEC)
@@ -18,7 +19,7 @@ run: $(EXEC)
 	./$(EXEC)
 
 $(EXEC): $(OBJECTS)
-	@echo g++ -g $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)
+	@echo g++ $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)
 	@$(G++) $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)
 
 bin/main.o: src/main.cpp
