@@ -20,3 +20,4 @@ Episode List
 * [014 - View and Projection Matrices](https://youtu.be/QAIbGN_oXdo)
 * [015 - Cleanup, GLSL Convention](https://youtu.be/hQw7_DWjQtg)
 * [016 - ModelAssets and ModelInstances](https://youtu.be/oDwALlxMa4k)
+* [017 - Complex Numbers (Part 1)](https://youtu.be/NpkoqTOWn4E)
