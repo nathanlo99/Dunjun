@@ -160,13 +160,29 @@ INTERNAL void renderInstance(const ModelInstance& instance) {
   asset->shaders->stopUsing();
 }
 
-INTERNAL void render() {
+INTERNAL void render(GLFWwindow* window) {
+
+  // Updates the viewport in case the user resizes the window
+  glfwGetWindowSize(window, &g_windowWidth, &g_windowHeight);
+  glViewport(0, 0, g_windowWidth, g_windowHeight);
+
+  glClearColor(0.5f, 0.69f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
+
+  Dunjun::Matrix4f projection = Dunjun::perspective(
+      70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
+
+  g_cameraTransform = projection * view;
 
   for (const ModelInstance& instance : g_instances) {
     instance.asset->shaders->use();
     renderInstance(instance);
   }
   glUseProgram(0);
+
+  glfwSwapBuffers(window);
 }
 
 int main() {
@@ -223,23 +239,8 @@ int main() {
 
   // Main loop
   while (!glfwWindowShouldClose(window) && running) {
-    // Updates the viewport in case the user resizes the window
-    glfwGetWindowSize(window, &g_windowWidth, &g_windowHeight);
-    glViewport(0, 0, g_windowWidth, g_windowHeight);
 
-    glClearColor(0.5f, 0.69f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
-
-    Dunjun::Matrix4f projection = Dunjun::perspective(
-        70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
-
-    g_cameraTransform = projection * view;
-
-    render();
-
-    glfwSwapBuffers(window);
+    render(window);
 
     if (tc.update(2.0)) {
       std::size_t tps = tc.tickRate();

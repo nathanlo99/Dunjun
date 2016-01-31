@@ -520,7 +520,7 @@ GLFWAPI GLFWscrollfun glfwSetScrollCallback(GLFWwindow* window,
                                             GLFWscrollfun cbfun);
 GLFWAPI GLFWdropfun glfwSetDropCallback(GLFWwindow* window, GLFWdropfun cbfun);
 GLFWAPI int glfwJoystickPresent(int joy);
-GLFWAPI const float* glfwGetJoystickAxes(int joy, int* count);
+GLFWAPI float* glfwGetJoystickAxes(int joy, int* count);
 GLFWAPI const unsigned char* glfwGetJoystickButtons(int joy, int* count);
 GLFWAPI const char* glfwGetJoystickName(int joy);
 GLFWAPI void glfwSetClipboardString(GLFWwindow* window, const char* string);

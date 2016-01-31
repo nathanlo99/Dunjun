@@ -7,17 +7,17 @@
 namespace Dunjun {
 struct Vector4f {
   Vector4f();
-  Vector4f(const float x, const float y, const float z, const float w);
-  Vector4f(const float xy[4]);
+  Vector4f(float x, float y, float z, float w);
+  Vector4f(float xy[4]);
 
   Vector4f operator+(const Vector4f& other) const;
   Vector4f operator-(const Vector4f& other) const;
   Vector4f& operator+=(const Vector4f& other);
   Vector4f& operator-=(const Vector4f& other);
-  Vector4f operator*(const float s) const;
-  Vector4f& operator*=(const float s);
-  Vector4f operator/(const float s) const;
-  Vector4f& operator/=(const float s);
+  Vector4f operator*(float s) const;
+  Vector4f& operator*=(float s);
+  Vector4f operator/(float s) const;
+  Vector4f& operator/=(float s);
 
   float length() const;
   float lengthSquared() const;
@@ -27,8 +27,8 @@ struct Vector4f {
   bool operator==(const Vector4f& other) const;
   bool operator!=(const Vector4f& other) const;
 
-  float& operator[](const int index) { return data[index]; }
-  const float& operator[](const int index) const { return data[index]; }
+  inline float& operator[](int index) { return data[index]; }
+  inline const float& operator[](int index) const { return data[index]; }
 
   union {
     float data[4];
@@ -44,7 +44,7 @@ struct Vector4f {
   };
 };
 
-Vector4f operator*(const float s, const Vector4f& v);
+Vector4f operator*(float s, const Vector4f& v);
 std::ostream& operator<<(std::ostream& os, const Vector4f& v);
 
 } // namespace Dunjun

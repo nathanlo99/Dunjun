@@ -18,26 +18,24 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   ShaderProgram();
   virtual ~ShaderProgram();
 
-  void attachShaderFromFile(const GLuint type, const std::string& fileName);
-  void attachShaderFromMemory(const GLuint type, const std::string& fileName);
+  void attachShaderFromFile(GLuint type, const std::string& fileName);
+  void attachShaderFromMemory(GLuint type, const std::string& fileName);
 
   void use() const;
   void stopUsing() const;
   void link() const;
 
-  void bindAttribLocation(const GLuint location, const GLchar* name);
+  void bindAttribLocation(GLuint location, const GLchar* name);
   GLint getAttribLocation(const GLchar* name);
   GLint getUniformLocation(const GLchar* name);
 
-  void setUniform(const GLchar* name, const float x);
-  void setUniform(const GLchar* name, const float x, const float y);
-  void setUniform(const GLchar* name, const float x, const float y,
-                  const float z);
-  void setUniform(const GLchar* name, const float x, const float y,
-                  const float z, const float w);
-  void setUniform(const GLchar* name, const int x);
-  void setUniform(const GLchar* name, const unsigned int x);
-  void setUniform(const GLchar* name, const bool x);
+  void setUniform(const GLchar* name, float x);
+  void setUniform(const GLchar* name, float x, float y);
+  void setUniform(const GLchar* name, float x, float y, float z);
+  void setUniform(const GLchar* name, float x, float y, float z, float w);
+  void setUniform(const GLchar* name, int x);
+  void setUniform(const GLchar* name, unsigned int x);
+  void setUniform(const GLchar* name, bool x);
   void setUniform(const GLchar* name, const Vector2f& v);
   void setUniform(const GLchar* name, const Vector3f& v);
   void setUniform(const GLchar* name, const Vector4f& v);

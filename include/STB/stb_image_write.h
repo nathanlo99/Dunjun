@@ -34,7 +34,7 @@ USAGE:
      int stbi_write_png(char const *filename, int w, int h, int comp, const void *data, int stride_in_bytes);
      int stbi_write_bmp(char const *filename, int w, int h, int comp, const void *data);
      int stbi_write_tga(char const *filename, int w, int h, int comp, const void *data);
-     int stbi_write_hdr(char const *filename, int w, int h, int comp, const float *data);
+     int stbi_write_hdr(char const *filename, int w, int h, int comp, float *data);
 
    There are also four equivalent functions that use an arbitrary write function. You are
    expected to open/close your file-equivalent before and after calling these:
@@ -42,7 +42,7 @@ USAGE:
      int stbi_write_png_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data, int stride_in_bytes);
      int stbi_write_bmp_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
      int stbi_write_tga_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
-     int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const float *data);
+     int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int w, int h, int comp, float *data);
 
    where the callback is:
       void stbi_write_func(void *context, void *data, int size);
@@ -129,7 +129,7 @@ extern int stbi_write_tga_with_rle;
 STBIWDEF int stbi_write_png(char const *filename, int w, int h, int comp, const void  *data, int stride_in_bytes);
 STBIWDEF int stbi_write_bmp(char const *filename, int w, int h, int comp, const void  *data);
 STBIWDEF int stbi_write_tga(char const *filename, int w, int h, int comp, const void  *data);
-STBIWDEF int stbi_write_hdr(char const *filename, int w, int h, int comp, const float *data);
+STBIWDEF int stbi_write_hdr(char const *filename, int w, int h, int comp, float *data);
 #endif
 
 typedef void stbi_write_func(void *context, void *data, int size);
@@ -137,7 +137,7 @@ typedef void stbi_write_func(void *context, void *data, int size);
 STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data, int stride_in_bytes);
 STBIWDEF int stbi_write_bmp_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
 STBIWDEF int stbi_write_tga_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
-STBIWDEF int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const float *data);
+STBIWDEF int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int w, int h, int comp, float *data);
 
 #ifdef __cplusplus
 }
@@ -622,14 +622,14 @@ static int stbi_write_hdr_core(stbi__write_context *s, int x, int y, int comp, f
    }
 }
 
-int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const float *data)
+int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int x, int y, int comp, float *data)
 {
    stbi__write_context s;
    stbi__start_write_callbacks(&s, func, context);
    return stbi_write_hdr_core(&s, x, y, comp, (float *) data);
 }
 
-int stbi_write_hdr(char const *filename, int x, int y, int comp, const float *data)
+int stbi_write_hdr(char const *filename, int x, int y, int comp, float *data)
 {
    stbi__write_context s;
    if (stbi__start_write_file(&s,filename)) {

@@ -7,5 +7,6 @@
 #include <Dunjun/Math/Vector4f.hpp>
 #include <Dunjun/Math/Matrix4f.hpp>
 #include <Dunjun/Math/Transform.hpp>
+#include <Dunjun/Math/Quaternion.hpp>
 
 #endif

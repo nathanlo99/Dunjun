@@ -19,11 +19,11 @@ Matrix4f Matrix4f::operator-(const Matrix4f& other) const {
                   m[3] - other[3]);
 }
 
-Matrix4f Matrix4f::operator*(const float s) const {
+Matrix4f Matrix4f::operator*(float s) const {
   return Matrix4f(m[0] * s, m[1] * s, m[2] * s, m[3] * s);
 }
 
-Matrix4f Matrix4f::operator/(const float s) const {
+Matrix4f Matrix4f::operator/(float s) const {
   return Matrix4f(m[0] / s, m[1] / s, m[2] / s, m[3] / s);
 }
 
@@ -176,7 +176,7 @@ bool Matrix4f::operator!=(const Matrix4f& other) const {
   return !(*this == other);
 }
 
-Matrix4f operator*(const float s, const Matrix4f& m) { return m * s; }
+Matrix4f operator*(float s, const Matrix4f& m) { return m * s; }
 
 std::ostream& operator<<(std::ostream& os, const Matrix4f& m) {
   return os << "Matrix4f("

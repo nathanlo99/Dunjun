@@ -7,17 +7,17 @@
 namespace Dunjun {
 struct Vector3f {
   Vector3f();
-  Vector3f(const float x, const float y, const float z);
-  Vector3f(const float xy[3]);
+  Vector3f(float x, float y, float z);
+  Vector3f(float xy[3]);
 
   Vector3f operator+(const Vector3f& other) const;
   Vector3f operator-(const Vector3f& other) const;
   Vector3f& operator+=(const Vector3f& other);
   Vector3f& operator-=(const Vector3f& other);
-  Vector3f operator*(const float s) const;
-  Vector3f& operator*=(const float s);
-  Vector3f operator/(const float s) const;
-  Vector3f& operator/=(const float s);
+  Vector3f operator*(float s) const;
+  Vector3f& operator*=(float s);
+  Vector3f operator/(float s) const;
+  Vector3f& operator/=(float s);
 
   float length() const;
   float lengthSquared() const;
@@ -28,8 +28,8 @@ struct Vector3f {
   bool operator==(const Vector3f& other) const;
   bool operator!=(const Vector3f& other) const;
 
-  inline float& operator[](const int index) { return data[index]; }
-  inline const float& operator[](const int index) const { return data[index]; }
+  inline float& operator[](int index) { return data[index]; }
+  inline const float& operator[](int index) const { return data[index]; }
 
   union {
     float data[3];
@@ -42,7 +42,7 @@ struct Vector3f {
   };
 };
 
-Vector3f operator*(const float s, const Vector3f& v);
+Vector3f operator*(float s, const Vector3f& v);
 std::ostream& operator<<(std::ostream& os, const Vector3f& v);
 
 } // namespace Dunjun

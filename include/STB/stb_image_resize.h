@@ -221,7 +221,7 @@ STBIRDEF int stbir_resize_uint8(     const unsigned char *input_pixels , int inp
                                            unsigned char *output_pixels, int output_w, int output_h, int output_stride_in_bytes,
                                      int num_channels);
 
-STBIRDEF int stbir_resize_float(     const float *input_pixels , int input_w , int input_h , int input_stride_in_bytes,
+STBIRDEF int stbir_resize_float(     float *input_pixels , int input_w , int input_h , int input_stride_in_bytes,
                                            float *output_pixels, int output_w, int output_h, int output_stride_in_bytes,
                                      int num_channels);
 
@@ -308,7 +308,7 @@ STBIRDEF int stbir_resize_uint16_generic(const stbir_uint16 *input_pixels  , int
                                          stbir_edge edge_wrap_mode, stbir_filter filter, stbir_colorspace space, 
                                          void *alloc_context);
 
-STBIRDEF int stbir_resize_float_generic( const float *input_pixels         , int input_w , int input_h , int input_stride_in_bytes,
+STBIRDEF int stbir_resize_float_generic( float *input_pixels         , int input_w , int input_h , int input_stride_in_bytes,
                                                float *output_pixels        , int output_w, int output_h, int output_stride_in_bytes,
                                          int num_channels, int alpha_channel, int flags,
                                          stbir_edge edge_wrap_mode, stbir_filter filter, stbir_colorspace space, 
@@ -1345,7 +1345,7 @@ static void stbir__decode_scanline(stbir__info* stbir_info, int n)
             int decode_pixel_index = x * channels;
             int input_pixel_index = stbir__edge_wrap(edge_horizontal, x, input_w) * channels;
             for (c = 0; c < channels; c++)
-                decode_buffer[decode_pixel_index + c] = ((const float*)input_data)[input_pixel_index + c];
+                decode_buffer[decode_pixel_index + c] = ((float*)input_data)[input_pixel_index + c];
         }
         break;
 
@@ -1355,10 +1355,10 @@ static void stbir__decode_scanline(stbir__info* stbir_info, int n)
             int decode_pixel_index = x * channels;
             int input_pixel_index = stbir__edge_wrap(edge_horizontal, x, input_w) * channels;
             for (c = 0; c < channels; c++)
-                decode_buffer[decode_pixel_index + c] = stbir__srgb_to_linear(((const float*)input_data)[input_pixel_index + c]);
+                decode_buffer[decode_pixel_index + c] = stbir__srgb_to_linear(((float*)input_data)[input_pixel_index + c]);
 
             if (!(stbir_info->flags&STBIR_FLAG_ALPHA_USES_COLORSPACE))
-                decode_buffer[decode_pixel_index + alpha_channel] = ((const float*)input_data)[input_pixel_index + alpha_channel];
+                decode_buffer[decode_pixel_index + alpha_channel] = ((float*)input_data)[input_pixel_index + alpha_channel];
         }
 
         break;
@@ -2463,7 +2463,7 @@ STBIRDEF int stbir_resize_uint8(     const unsigned char *input_pixels , int inp
         STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP, STBIR_COLORSPACE_LINEAR);
 }
 
-STBIRDEF int stbir_resize_float(     const float *input_pixels , int input_w , int input_h , int input_stride_in_bytes,
+STBIRDEF int stbir_resize_float(     float *input_pixels , int input_w , int input_h , int input_stride_in_bytes,
                                            float *output_pixels, int output_w, int output_h, int output_stride_in_bytes,
                                      int num_channels)
 {
@@ -2519,7 +2519,7 @@ STBIRDEF int stbir_resize_uint16_generic(const stbir_uint16 *input_pixels  , int
 }
 
 
-STBIRDEF int stbir_resize_float_generic( const float *input_pixels         , int input_w , int input_h , int input_stride_in_bytes,
+STBIRDEF int stbir_resize_float_generic( float *input_pixels         , int input_w , int input_h , int input_stride_in_bytes,
                                                float *output_pixels        , int output_w, int output_h, int output_stride_in_bytes,
                                          int num_channels, int alpha_channel, int flags,
                                          stbir_edge edge_wrap_mode, stbir_filter filter, stbir_colorspace space, 

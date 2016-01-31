@@ -1561,8 +1561,8 @@ int stb__charcmp(const void *a, const void *b)
 
 int stb__floatcmp(const void *a, const void *b)
 {
-   const float p = *(const float *) ((const char *) a + stb__floatcmpoffset);
-   const float q = *(const float *) ((const char *) b + stb__floatcmpoffset);
+   float p = *(float *) ((const char *) a + stb__floatcmpoffset);
+   float q = *(float *) ((const char *) b + stb__floatcmpoffset);
    return p < q ? -1 : p > q;
 }
 

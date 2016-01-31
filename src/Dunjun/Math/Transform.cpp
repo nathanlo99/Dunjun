@@ -28,8 +28,8 @@ Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
 
   if (degrees) angle *= M_PI / 180;
 
-  const float c = cosf(angle);
-  const float s = sinf(angle);
+  float c = cosf(angle);
+  float s = sinf(angle);
 
   const Vector3f axis = v.normalize();
   const Vector3f t    = (1.0f - c) * axis;
@@ -89,7 +89,7 @@ Matrix4f ortho(float left, float right, float bottom, float top, float zNear,
 Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
                      float zFar) {
   if (degrees) fov *= M_PI / 180;
-  const float tanHalfFOV = tanf(fov / 2.0f);
+  float tanHalfFOV = tanf(fov / 2.0f);
 
   Matrix4f result;
   result[0][0] = 1.0f / (aspect * tanHalfFOV);
@@ -103,7 +103,7 @@ Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
 
 Matrix4f perspective(float fov, bool degrees, float aspect, float zNear) {
   if (degrees) fov *= M_PI / 180;
-  const float tanHalfFOV = tanf(fov / 2.0f);
+  float tanHalfFOV = tanf(fov / 2.0f);
 
   Matrix4f result;
   result[0][0] = 1.0f / (tanHalfFOV * aspect);

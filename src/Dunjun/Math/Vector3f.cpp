@@ -4,9 +4,9 @@
 
 namespace Dunjun {
 Vector3f::Vector3f() : x(0), y(0), z(0) {}
-Vector3f::Vector3f(const float x, const float y, const float z)
+Vector3f::Vector3f(float x, float y, float z)
 : x(x), y(y), z(z) {}
-Vector3f::Vector3f(const float xy[3]) : x(xy[0]), y(xy[1]), z(xy[2]) {}
+Vector3f::Vector3f(float xy[3]) : x(xy[0]), y(xy[1]), z(xy[2]) {}
 
 Vector3f Vector3f::operator+(const Vector3f& other) const {
   return Vector3f(x + other.x, y + other.y, z + other.z);
@@ -30,22 +30,22 @@ Vector3f& Vector3f::operator-=(const Vector3f& other) {
   return *this;
 }
 
-Vector3f Vector3f::operator*(const float s) const {
+Vector3f Vector3f::operator*(float s) const {
   return Vector3f(s * x, s * y, s * z);
 }
 
-Vector3f& Vector3f::operator*=(const float s) {
+Vector3f& Vector3f::operator*=(float s) {
   x *= s;
   y *= s;
   z *= s;
   return *this;
 }
 
-Vector3f Vector3f::operator/(const float s) const {
+Vector3f Vector3f::operator/(float s) const {
   return Vector3f(x / s, y / s, z / s);
 }
 
-Vector3f& Vector3f::operator/=(const float s) {
+Vector3f& Vector3f::operator/=(float s) {
   x /= s;
   y /= s;
   z /= s;
@@ -73,7 +73,7 @@ bool Vector3f::operator!=(const Vector3f& other) const {
   return !(*this == other);
 }
 
-Vector3f operator*(const float s, const Vector3f& v) { return v * s; }
+Vector3f operator*(float s, const Vector3f& v) { return v * s; }
 
 std::ostream& operator<<(std::ostream& os, const Vector3f& v) {
   return os << "Vector3f (" << v.x << ", " << v.y << ", " << v.z << ")";

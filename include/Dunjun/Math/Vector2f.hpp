@@ -7,17 +7,17 @@
 namespace Dunjun {
 struct Vector2f {
   Vector2f();
-  Vector2f(const float x, const float y);
-  Vector2f(const float xy[2]);
+  Vector2f(float x, float y);
+  Vector2f(float xy[2]);
 
   Vector2f operator+(const Vector2f& other) const;
   Vector2f operator-(const Vector2f& other) const;
   Vector2f& operator+=(const Vector2f& other);
   Vector2f& operator-=(const Vector2f& other);
-  Vector2f operator*(const float s) const;
-  Vector2f& operator*=(const float s);
-  Vector2f operator/(const float s) const;
-  Vector2f& operator/=(const float s);
+  Vector2f operator*(float s) const;
+  Vector2f& operator*=(float s);
+  Vector2f operator/(float s) const;
+  Vector2f& operator/=(float s);
 
   float length() const;
   float lengthSquared() const;
@@ -28,8 +28,8 @@ struct Vector2f {
   bool operator==(const Vector2f& other) const;
   bool operator!=(const Vector2f& other) const;
 
-  inline float& operator[](const int index) { return data[index]; }
-  inline const float& operator[](const int index) const { return data[index]; }
+  inline float& operator[](int index) { return data[index]; }
+  inline const float& operator[](int index) const { return data[index]; }
 
   union {
     float data[2];
@@ -42,7 +42,7 @@ struct Vector2f {
   };
 };
 
-Vector2f operator*(const float s, const Vector2f& v);
+Vector2f operator*(float s, const Vector2f& v);
 std::ostream& operator<<(std::ostream& os, const Vector2f& v);
 
 } // namespace Dunjun

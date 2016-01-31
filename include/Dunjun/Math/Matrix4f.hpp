@@ -14,8 +14,8 @@ class Matrix4f {
 
   Matrix4f operator+(const Matrix4f& other) const;
   Matrix4f operator-(const Matrix4f& other) const;
-  Matrix4f operator*(const float s) const;
-  Matrix4f operator/(const float s) const;
+  Matrix4f operator*(float s) const;
+  Matrix4f operator/(float s) const;
   Matrix4f& operator+=(const Matrix4f& other);
   Matrix4f& operator-=(const Matrix4f& other);
   Matrix4f& operator*=(const Matrix4f& other);
@@ -28,14 +28,14 @@ class Matrix4f {
   bool operator==(const Matrix4f& other) const;
   bool operator!=(const Matrix4f& other) const;
 
-  inline Vector4f& operator[](const int index) { return m[index]; }
-  inline const Vector4f& operator[](const int index) const { return m[index]; }
+  inline Vector4f& operator[](int index) { return m[index]; }
+  inline const Vector4f& operator[](int index) const { return m[index]; }
 
   private:
   Vector4f m[4];
 };
 
-Matrix4f operator*(const float s, const Matrix4f& m);
+Matrix4f operator*(float s, const Matrix4f& m);
 std::ostream& operator<<(std::ostream& os, const Matrix4f& m);
 
 } // namespace Dunjun

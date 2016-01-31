@@ -6,8 +6,8 @@
 namespace Dunjun {
 
 Vector2f::Vector2f() : x(0), y(0) {}
-Vector2f::Vector2f(const float x, const float y) : x(x), y(y) {}
-Vector2f::Vector2f(const float xy[2]) : x(xy[0]), y(xy[1]) {}
+Vector2f::Vector2f(float x, float y) : x(x), y(y) {}
+Vector2f::Vector2f(float xy[2]) : x(xy[0]), y(xy[1]) {}
 
 Vector2f Vector2f::operator+(const Vector2f& other) const {
   return Vector2f(x + other.x, y + other.y);
@@ -29,21 +29,21 @@ Vector2f& Vector2f::operator-=(const Vector2f& other) {
   return *this;
 }
 
-Vector2f Vector2f::operator*(const float s) const {
+Vector2f Vector2f::operator*(float s) const {
   return Vector2f(x * s, y * s);
 }
 
-Vector2f& Vector2f::operator*=(const float s) {
+Vector2f& Vector2f::operator*=(float s) {
   x *= s;
   y *= s;
   return *this;
 }
 
-Vector2f Vector2f::operator/(const float s) const {
+Vector2f Vector2f::operator/(float s) const {
   return Vector2f(x / s, y / s);
 }
 
-Vector2f& Vector2f::operator/=(const float s) {
+Vector2f& Vector2f::operator/=(float s) {
   x /= s;
   y /= s;
   return *this;
@@ -63,7 +63,7 @@ bool Vector2f::operator!=(const Vector2f& other) const {
   return !(*this == other);
 }
 
-Vector2f operator*(const float s, const Vector2f& v) { return v * s; }
+Vector2f operator*(float s, const Vector2f& v) { return v * s; }
 
 std::ostream& operator<<(std::ostream& os, const Vector2f& v) {
   return os << "Vector2f (" << v.x << ", " << v.y << ")";
