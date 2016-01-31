@@ -19,5 +19,7 @@
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl.h>
 
+#include <Dunjun/Math.hpp>
+
 namespace Dunjun {} // namespace Dunjun
 #endif

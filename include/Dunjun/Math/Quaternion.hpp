@@ -48,7 +48,7 @@ struct Quaternion {
     return Quaternion(x / s, y / s, z / s, w / s);
   }
 
-  Quaternion operator*(const Quaternion& b) const {
+  inline Quaternion operator*(const Quaternion& b) const {
     float xx = w * b.x + x * b.w + y * b.z - z * b.y;
     float yy = w * b.y - x * b.z + y * b.w + z * b.x;
     float zz = w * b.z + x * b.y - y * b.x + z * b.w;
@@ -56,7 +56,7 @@ struct Quaternion {
     return Quaternion(xx, yy, zz, ww);
   }
 
-  inline Vector3f operator*(const Vector3f& v) {
+  inline Vector3f operator*(const Vector3f& v) const {
     const Vector3f xyz(x, y, z);
     Vector3f t = 2.0f * xyz.cross(v);
     return v + w * t + xyz.cross(t);
@@ -89,7 +89,7 @@ struct Quaternion {
     return e;
   }
 
-  inline Matrix4f toMatrix() {
+  inline Matrix4f toMatrix() const {
     Matrix4f mat;
     const Quaternion a = normalize();
 

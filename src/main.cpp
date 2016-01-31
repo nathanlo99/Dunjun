@@ -7,7 +7,6 @@
 #include <Dunjun/ShaderProgram.hpp>
 #include <Dunjun/Image.hpp>
 #include <Dunjun/Texture.hpp>
-
 #include <Dunjun/Math.hpp>
 
 GLOBAL const int g_fpsCap = 1200; // Basically unreachable
@@ -36,7 +35,7 @@ struct ModelAsset {
 
 struct ModelInstance {
   ModelAsset* asset;
-  Dunjun::Matrix4f transform;
+  Dunjun::Transform transform;
 };
 
 GLOBAL Dunjun::ShaderProgram* g_defaultShader;
@@ -111,25 +110,25 @@ INTERNAL void loadSpriteAsset() {
 
 INTERNAL void loadInstances() {
   ModelInstance a;
-  a.asset     = &g_sprite;
-  a.transform = Dunjun::translate({0, 0, 0});
+  a.asset              = &g_sprite;
+  a.transform.position = {0, 0, 0};
   g_instances.push_back(a);
 
   ModelInstance b;
-  b.asset     = &g_sprite;
-  b.transform = Dunjun::translate({2, 0, 0});
+  b.asset              = &g_sprite;
+  b.transform.position = {2, 0, 0};
   g_instances.push_back(b);
 
   ModelInstance c;
-  c.asset     = &g_sprite;
-  c.transform = Dunjun::translate({0, 0, 1});
+  c.asset              = &g_sprite;
+  c.transform.position = {0, 0, 1};
   g_instances.push_back(c);
 }
 
 INTERNAL void renderInstance(const ModelInstance& instance) {
   ModelAsset* asset = instance.asset;
 
-  asset->shaders->setUniform("u_model", instance.transform);
+  asset->shaders->setUniform("u_transform", instance.transform);
   asset->shaders->setUniform("u_camera", g_cameraTransform);
 
   asset->shaders->setUniform("u_tex", 0);

@@ -18,6 +18,14 @@ struct Vector3f {
     return Vector3f(x - other.x, y - other.y, z - other.z);
   }
 
+  inline Vector3f operator*(const Vector3f& other) const {
+    return Vector3f(x * other.x, y * other.y, z * other.z);
+  }
+
+  inline Vector3f operator/(const Vector3f& other) const {
+    return Vector3f(x / other.x, y / other.y, z / other.z);
+  }
+
   inline Vector3f& operator+=(const Vector3f& other) {
     x += other.x;
     y += other.y;

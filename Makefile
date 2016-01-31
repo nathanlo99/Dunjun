@@ -7,8 +7,6 @@ FLAGS = -pipe -std=c++14 -Ofast \
 WARNINGS = -Wall -Wextra -Wno-unused
 EXEC = main
 
-.PHONY: bin/main.o
-
 all: $(EXEC)
 	@echo Built!
 

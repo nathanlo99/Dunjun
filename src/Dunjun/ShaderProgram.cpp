@@ -154,4 +154,16 @@ void ShaderProgram::setUniform(const GLchar* name, const Matrix4f& m) {
   glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m[0].data);
 }
 
+void ShaderProgram::setUniform(const GLchar* name, const Quaternion& q) {
+  use();
+  glUniform4fv(getUniformLocation(name), 1, &q.x);
+}
+
+void ShaderProgram::setUniform(const GLchar* name, const Transform& t) {
+  std::string n = name;
+  setUniform((n + ".position").c_str(), t.position);
+  setUniform((n + ".rotation").c_str(), t.rotation);
+  setUniform((n + ".scale").c_str(), t.scale);
+}
+
 } // namespace Dunjun

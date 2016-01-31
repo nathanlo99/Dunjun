@@ -6,10 +6,6 @@
 #include <map>
 
 #include <Dunjun/common.hpp>
-#include <Dunjun/Math/Vector2f.hpp>
-#include <Dunjun/Math/Vector3f.hpp>
-#include <Dunjun/Math/Vector4f.hpp>
-#include <Dunjun/Math/Matrix4f.hpp>
 #include <Dunjun/NonCopyable.hpp>
 
 namespace Dunjun {
@@ -40,6 +36,8 @@ class ShaderProgram : public NonCopyable { // Wrapper class for an OpenGL shader
   void setUniform(const GLchar* name, const Vector3f& v);
   void setUniform(const GLchar* name, const Vector4f& v);
   void setUniform(const GLchar* name, const Matrix4f& m);
+  void setUniform(const GLchar* name, const Quaternion& q);
+  void setUniform(const GLchar* name, const Transform& t);
 
   inline GLuint program() const { return m_program; }
 

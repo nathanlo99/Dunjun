@@ -4,9 +4,10 @@
 
 #include <Dunjun/Math/Vector3f.hpp>
 #include <Dunjun/Math/Matrix4f.hpp>
+#include <Dunjun/Math/Quaternion.hpp>
 
 namespace Dunjun {
-Matrix4f identity() {
+inline Matrix4f identity() {
   Matrix4f m;
   m[0][0] = 1;
   m[1][1] = 1;
@@ -15,7 +16,7 @@ Matrix4f identity() {
   return m;
 }
 
-Matrix4f translate(const Vector3f& v) {
+inline Matrix4f translate(const Vector3f& v) {
   Matrix4f m;
   m[0][0] = 1.0f;
   m[1][1] = 1.0f;
@@ -24,7 +25,7 @@ Matrix4f translate(const Vector3f& v) {
   return m;
 }
 
-Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
+inline Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
 
   if (degrees) angle *= M_PI / 180;
 
@@ -53,7 +54,7 @@ Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
   return rot;
 }
 
-Matrix4f scale(const Vector3f& v) {
+inline Matrix4f scale(const Vector3f& v) {
   Matrix4f result;
   result[0][0] = v[0];
   result[1][1] = v[1];
@@ -62,7 +63,7 @@ Matrix4f scale(const Vector3f& v) {
   return result;
 }
 
-Matrix4f ortho(float left, float right, float bottom, float top) {
+inline Matrix4f ortho(float left, float right, float bottom, float top) {
   Matrix4f result;
   result[0][0] = 2.0f / (right - left);
   result[1][1] = 2.0f / (top - bottom);
@@ -73,8 +74,8 @@ Matrix4f ortho(float left, float right, float bottom, float top) {
   return result;
 }
 
-Matrix4f ortho(float left, float right, float bottom, float top, float zNear,
-               float zFar) {
+inline Matrix4f ortho(float left, float right, float bottom, float top,
+                      float zNear, float zFar) {
   Matrix4f result;
   result[0][0] = 2.0f / (right - left);
   result[1][1] = 2.0f / (top - bottom);
@@ -86,8 +87,8 @@ Matrix4f ortho(float left, float right, float bottom, float top, float zNear,
   return result;
 }
 
-Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
-                     float zFar) {
+inline Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
+                            float zFar) {
   if (degrees) fov *= M_PI / 180;
   float tanHalfFOV = tanf(fov / 2.0f);
 
@@ -101,7 +102,8 @@ Matrix4f perspective(float fov, bool degrees, float aspect, float zNear,
   return result;
 }
 
-Matrix4f perspective(float fov, bool degrees, float aspect, float zNear) {
+inline Matrix4f perspective(float fov, bool degrees, float aspect,
+                            float zNear) {
   if (degrees) fov *= M_PI / 180;
   float tanHalfFOV = tanf(fov / 2.0f);
 
@@ -114,8 +116,8 @@ Matrix4f perspective(float fov, bool degrees, float aspect, float zNear) {
   return result;
 }
 
-Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
-                const Vector3f& up) {
+inline Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
+                       const Vector3f& up) {
 
   const Vector3f f = (center - eye).normalize();
   const Vector3f s = f.cross(up).normalize();
@@ -142,6 +144,33 @@ Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
 
   return result;
 }
+
+struct Transform {
+
+  inline Transform operator*(const Transform& other) const {
+    Transform result;
+    result.position = position + rotation * (scale * other.position);
+    result.rotation = rotation * other.rotation;
+    result.scale    = scale * (rotation * other.scale);
+    return result;
+  }
+
+  inline Transform operator/(const Transform& other) const {
+    Transform result;
+    const Quaternion conj = other.rotation.inverse();
+
+    result.position = (conj * (position - other.position)) / other.scale;
+    result.rotation = conj * rotation;
+    result.scale    = conj * (scale / other.scale);
+    return result;
+  }
+
+  inline Transform inverse() const { return Transform() / *this; }
+
+  Vector3f position   = {0, 0, 0};
+  Quaternion rotation = {0, 0, 0, 1};
+  Vector3f scale      = {1, 1, 1};
+};
 
 } // namespace Dunjun
 
