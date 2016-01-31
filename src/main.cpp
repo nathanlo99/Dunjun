@@ -95,7 +95,7 @@ INTERNAL void loadSpriteAsset() {
   glBindBuffer(GL_ARRAY_BUFFER, g_sprite.vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  u32 indices[] = {0, 1, 2, 2, 3, 0};
+  unsigned int indices[] = {0, 1, 2, 2, 3, 0};
 
   glGenBuffers(1, &g_sprite.ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_sprite.ibo);
@@ -242,7 +242,7 @@ int main() {
 
     render(window);
 
-    if (tc.update(2.0)) {
+    if (tc.update(1.0)) {
       std::size_t tps = tc.tickRate();
       std::stringstream title;
       title << g_windowTitle << " | " << tps << " FPS | " << 1000. / tps

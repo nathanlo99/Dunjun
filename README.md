@@ -22,4 +22,6 @@ Episode List
 * [016 - ModelAssets and ModelInstances](https://youtu.be/oDwALlxMa4k)
 * [017 - Complex Numbers (Part 1)](https://youtu.be/NpkoqTOWn4E)
 * [018 - Complex Numbers (Part 2)](https://youtu.be/Vhtw7EvLuQQ)
-* [019 - Quaternions (Part 1)](https://youtu.be/7rZWS_62rXY)
+* [019 - Quaternions (Part 1)](https://youtu.be/GFnWLM_HcKw)
+* [020 - Quaternions](https://youtu.be/7rZWS_62rXY)
+* [021 - Quaternion Functions](https://youtu.be/8pUqEspcS8w)

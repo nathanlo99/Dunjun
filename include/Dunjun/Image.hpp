@@ -10,33 +10,33 @@ class Image {
   public:
   Image();
   Image(const char* fileName);
-  Image(u32 width, u32 height, ImageFormat format, const u8* pixels = nullptr);
+  Image(unsigned int width, unsigned int height, ImageFormat format, const unsigned char* pixels = nullptr);
   Image(const Image& other);
   Image& operator=(const Image& other);
   virtual ~Image();
 
   void loadFromFile(const char* fileName);
-  void loadFromMemory(u32 width, u32 height, ImageFormat format,
-                      const u8* pixels);
+  void loadFromMemory(unsigned int width, unsigned int height, ImageFormat format,
+                      const unsigned char* pixels);
 
   void flipVertically();
   void rotateCCW();
 
-  void copyRectFromImage(const Image& src, u32 sc, u32 sr, u32 tc, u32 tr,
-                         u32 w, u32 h);
+  void copyRectFromImage(const Image& src, unsigned int sc, unsigned int sr, unsigned int tc, unsigned int tr,
+                         unsigned int w, unsigned int h);
 
-  inline u32 width() const { return m_width; }
-  inline u32 height() const { return m_height; }
+  inline unsigned int width() const { return m_width; }
+  inline unsigned int height() const { return m_height; }
   inline ImageFormat format() const { return m_format; }
-  inline u8* pixels() const { return m_pixels; }
+  inline unsigned char* pixels() const { return m_pixels; }
 
-  u8* getPixel(u32 c, u32 r) const;
-  void setPixel(u32 c, u32 r, const u32* pixel);
+  unsigned char* getPixel(unsigned int c, unsigned int r) const;
+  void setPixel(unsigned int c, unsigned int r, const unsigned int* pixel);
 
   private:
   ImageFormat m_format;
-  u32 m_width, m_height;
-  u8* m_pixels;
+  unsigned int m_width, m_height;
+  unsigned char* m_pixels;
 };
 
 } // namespace Dunjun

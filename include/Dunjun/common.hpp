@@ -12,15 +12,12 @@
 #include <sstream>
 #include <cstring>
 #include <cstddef>
-#include <cfloat>
 #include <vector>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl.h>
-
-#include <Dunjun/types.hpp>
 
 namespace Dunjun {} // namespace Dunjun
 #endif

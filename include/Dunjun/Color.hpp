@@ -6,9 +6,9 @@
 
 namespace Dunjun {
 union Color {
-  u8 data[4];
+  unsigned char data[4];
   struct {
-    u8 r, g, b, a;
+    unsigned char r, g, b, a;
   };
 };
 } // namespace Dunjun;

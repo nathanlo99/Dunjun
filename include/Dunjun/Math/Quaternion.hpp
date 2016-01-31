@@ -49,13 +49,11 @@ struct Quaternion {
   }
 
   Quaternion operator*(const Quaternion& b) const {
-    const Vector3f a_xyz(x, y, z);
-    const Vector3f b_xyz(b.x, b.y, b.z);
-    Vector3f c_xyz;
-    float c_w;
-    c_xyz = w * b_xyz + b.w * a_xyz + a_xyz.cross(b_xyz);
-    c_w = w * b.w - a_xyz.dot(b_xyz);
-    return Quaternion(c_xyz, c_w);
+    float xx = w * b.x + x * b.w + y * b.z - z * b.y;
+    float yy = w * b.y - x * b.z + y * b.w + z * b.x;
+    float zz = w * b.z + x * b.y - y * b.x + z * b.w;
+    float ww = w * b.w - x * b.x - y * b.y - z * b.z;
+    return Quaternion(xx, yy, zz, ww);
   }
 
   inline Vector3f operator*(const Vector3f& v) {
@@ -68,6 +66,13 @@ struct Quaternion {
     return x * other.x + y * other.y + z * other.z + w * other.w;
   }
 
+  inline Quaternion cross(const Quaternion& b) const {
+    return Quaternion(w * b.x + x * b.w + y * b.z - z * b.y,
+                      w * b.y + y * b.w + z * b.x - x * b.z,
+                      w * b.z + z * b.w + x * b.y - y * b.x,
+                      w * b.w - x * b.x - y * b.y - z * b.z);
+  }
+
   inline Quaternion conjugate() const { return Quaternion(-x, -y, -z, w); }
   inline Quaternion inverse() const { return conjugate() / lengthSquared(); }
   inline float lengthSquared() const { return x * x + y * y + z * z + w * w; }
@@ -78,10 +83,40 @@ struct Quaternion {
 
   inline EulerAngles getEulerAngles() const {
     EulerAngles e;
-    e.roll  = atan2f(2.0f * x * y + z * w, x * x + w * w - y * y - z * z);
     e.pitch = atan2f(2.0f * y * z + w * x, w * w - x * x - y * y + z * z);
+    e.roll  = atan2f(2.0f * x * y + z * w, x * x + w * w - y * y - z * z);
     e.yaw   = asinf(-2.0f * (x * z - w * y));
     return e;
+  }
+
+  inline Matrix4f toMatrix() {
+    Matrix4f mat;
+    const Quaternion a = normalize();
+
+    const float xx = a.x * a.x;
+    const float yy = a.y * a.y;
+    const float zz = a.z * a.z;
+    const float xy = a.x * a.y;
+    const float xz = a.x * a.z;
+    const float yz = a.y * a.z;
+    const float wx = a.w * a.x;
+    const float wy = a.w * a.y;
+    const float wz = a.w * a.z;
+
+    mat[0][0] = 1.0f - 2.0f * (yy + zz);
+    mat[0][1] = 2.0f * (xy + wz);
+    mat[0][2] = 2.0f * (xz - wy);
+
+    mat[1][0] = 2.0f * (xy - wz);
+    mat[1][1] = 1.0f - 2.0f * (xx + zz);
+    mat[1][2] = 2.0f * (yz + wx);
+
+    mat[2][0] = 2.0f * (xz + wy);
+    mat[2][1] = 2.0f * (yz - wx);
+    mat[2][2] = 1.0f - 2.0f * (xx + yy);
+
+    mat[3][3] = 1.0f;
+    return mat;
   }
 
   inline Vector3f axis() const {
@@ -104,6 +139,24 @@ inline Quaternion operator*(float s, const Quaternion& q) { return q * s; }
 inline std::ostream& operator<<(std::ostream& os, const Quaternion& q) {
   return os << "Quaternion (" << q.x << ", " << q.y << ", " << q.z << ", "
             << q.w << ")";
+}
+
+// INTERPOLATION FUNCTIONS
+inline float lerp(float x, float y, float t) { return x * (1.0f - t) + y * t; }
+
+inline Quaternion slerp(const Quaternion& x, const Quaternion& y, float t) {
+  Quaternion z   = y;
+  float cosTheta = x.dot(y);
+  if (cosTheta < 0.0f) {
+    z = y * -1;
+    cosTheta *= -1;
+  } else if (cosTheta > 1.0f) {
+    return Quaternion(lerp(x.x, y.x, t), lerp(x.y, y.y, t), lerp(x.z, y.z, t),
+                      lerp(x.w, y.w, t));
+  } else {
+    float angle = acosf(cosTheta);
+    return (sinf(1.0f - t * angle) * x + sinf(t * angle) * z) / sinf(angle);
+  }
 }
 
 } // namespace Dunjun
