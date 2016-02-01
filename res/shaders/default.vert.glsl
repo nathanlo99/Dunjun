@@ -11,7 +11,7 @@ vec3 quaternionRotate(vec4 q, vec3 v) {
   return v + q.w * t + cross(q.xyz, t);
 }
 
-attribute vec2 v_position;
+attribute vec3 v_position;
 attribute vec3 v_color;
 attribute vec2 v_texCoord;
 
@@ -25,7 +25,7 @@ void main(){
   f_color = v_color;
   f_texCoord = v_texCoord;
 
-  vec3 pos = vec3(v_position, 0.0);
+  vec3 pos = v_position;
   pos = u_transform.scale * pos;
   pos = quaternionRotate(u_transform.rotation, pos);
   pos = u_transform.position + pos;

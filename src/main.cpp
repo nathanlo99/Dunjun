@@ -1,5 +1,3 @@
-#include <cmath>
-
 #include <Dunjun/common.hpp>
 #include <Dunjun/Color.hpp>
 #include <Dunjun/Clock.hpp>
@@ -7,22 +5,19 @@
 #include <Dunjun/ShaderProgram.hpp>
 #include <Dunjun/Image.hpp>
 #include <Dunjun/Texture.hpp>
+#include <Dunjun/Vertex.hpp>
 #include <Dunjun/Math.hpp>
 
-GLOBAL const int g_fpsCap = 1200; // Basically unreachable
-GLOBAL int g_windowWidth  = 800;
-GLOBAL int g_windowHeight = 600;
+GLOBAL const int g_fpsCap       = 240; // Basically unreachable
+GLOBAL const int g_effectiveFPS = 120;
+GLOBAL const float g_timeStep   = 1.0f / g_effectiveFPS;
+GLOBAL int g_windowWidth        = 800;
+GLOBAL int g_windowHeight       = 600;
+GLOBAL bool g_resizedLastFrame  = false;
 
 GLOBAL const char* g_windowTitle = "Dunjun";
 
-// Uncomment when fullscreen is re-implemented
-// GLOBAL int g_fullWidth, g_fullHeight;
-
-struct Vertex {
-  Dunjun::Vector2f pos;
-  Dunjun::Color color;
-  Dunjun::Vector2f texCoords;
-};
+GLOBAL int g_fullWidth, g_fullHeight;
 
 struct ModelAsset {
   Dunjun::ShaderProgram* shaders;
@@ -43,11 +38,29 @@ GLOBAL ModelAsset g_sprite;
 GLOBAL std::vector<ModelInstance> g_instances;
 GLOBAL Dunjun::Matrix4f g_cameraTransform;
 
+INTERNAL void onResize(GLFWwindow* window, int width, int height) {
+  if (g_resizedLastFrame) return;
+  g_resizedLastFrame = true;
+
+  g_windowWidth  = width;
+  g_windowHeight = height;
+  glViewport(0, 0, g_windowWidth, g_windowHeight);
+
+  Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
+
+  Dunjun::Matrix4f projection = Dunjun::perspective(
+      70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
+
+  g_cameraTransform = projection * view;
+
+  std::cout << "RESIZED" << std::endl;
+}
+
 INTERNAL void handleInput(GLFWwindow* window, bool& running, bool& fullscreen) {
   glfwPollEvents();
 
   // Exit if ESCAPE is pressed
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE)) running = false;
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) running = false;
 
   fullscreen = fullscreen; // To stop 'unused' warnings until fullscreen fixed
 
@@ -82,12 +95,12 @@ INTERNAL void loadShaders() {
 
 INTERNAL void loadSpriteAsset() {
 
-  Vertex vertices[] = {
-      //    x      y       r     g     b     a       u     v
-      {{-0.5f, -0.5f}, {0x00, 0x00, 0xFF, 0xFF}, {0.0f, 0.0f}}, // Vertex 0
-      {{+0.5f, -0.5f}, {0x00, 0xFF, 0x00, 0xFF}, {1.0f, 0.0f}}, // Vertex 1
-      {{+0.5f, +0.5f}, {0xFF, 0xFF, 0xFF, 0xFF}, {1.0f, 1.0f}}, // Vertex 2
-      {{-0.5f, +0.5f}, {0xFF, 0x00, 0x00, 0xFF}, {0.0f, 1.0f}}, // Vertex 3
+  Dunjun::Vertex vertices[] = {
+      //    x      y     z       r     g     b     a       u     v
+      {{-0.5f, -0.5f, 0.0f}, {0x00, 0x00, 0xFF, 0xFF}, {0.0f, 0.0f}}, // V0
+      {{+0.5f, -0.5f, 0.0f}, {0x00, 0xFF, 0x00, 0xFF}, {1.0f, 0.0f}}, // V1
+      {{+0.5f, +0.5f, 0.0f}, {0xFF, 0xFF, 0xFF, 0xFF}, {1.0f, 1.0f}}, // V2
+      {{-0.5f, +0.5f, 0.0f}, {0xFF, 0x00, 0x00, 0xFF}, {0.0f, 1.0f}}, // V3
   };
 
   glGenBuffers(1, &g_sprite.vbo);
@@ -109,9 +122,12 @@ INTERNAL void loadSpriteAsset() {
 }
 
 INTERNAL void loadInstances() {
+
   ModelInstance a;
   a.asset              = &g_sprite;
   a.transform.position = {0, 0, 0};
+  a.transform.scale    = {3, 3, 3};
+  a.transform.rotation = Dunjun::Quaternion(45, true, {0, 0, 1});
   g_instances.push_back(a);
 
   ModelInstance b;
@@ -122,7 +138,21 @@ INTERNAL void loadInstances() {
   ModelInstance c;
   c.asset              = &g_sprite;
   c.transform.position = {0, 0, 1};
+  c.transform.rotation = Dunjun::Quaternion(45, true, {0, 1, 0});
   g_instances.push_back(c);
+}
+
+INTERNAL void update(float dt) {
+  const Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
+
+  const Dunjun::Matrix4f projection = Dunjun::perspective(
+      70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
+
+  g_cameraTransform = projection * view;
+
+  g_instances[0].transform.rotation =
+      Dunjun::Quaternion(120 * dt, true, {0, 1, 0}) *
+      g_instances[0].transform.rotation;
 }
 
 INTERNAL void renderInstance(const ModelInstance& instance) {
@@ -143,12 +173,12 @@ INTERNAL void renderInstance(const ModelInstance& instance) {
   glEnableVertexAttribArray(1); // v_color
   glEnableVertexAttribArray(2); // v_texCoords
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (const GLvoid*)offsetof(Vertex, pos));
-  glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex),
-                        (const GLvoid*)offsetof(Vertex, color));
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (const GLvoid*)offsetof(Vertex, texCoords));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Dunjun::Vertex),
+                        (const GLvoid*)offsetof(Dunjun::Vertex, pos));
+  glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Dunjun::Vertex),
+                        (const GLvoid*)offsetof(Dunjun::Vertex, color));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Dunjun::Vertex),
+                        (const GLvoid*)offsetof(Dunjun::Vertex, texCoords));
 
   glDrawElements(asset->drawType, asset->drawCount, GL_UNSIGNED_INT, nullptr);
 
@@ -161,19 +191,8 @@ INTERNAL void renderInstance(const ModelInstance& instance) {
 
 INTERNAL void render(GLFWwindow* window) {
 
-  // Updates the viewport in case the user resizes the window
-  glfwGetWindowSize(window, &g_windowWidth, &g_windowHeight);
-  glViewport(0, 0, g_windowWidth, g_windowHeight);
-
   glClearColor(0.5f, 0.69f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
-
-  Dunjun::Matrix4f projection = Dunjun::perspective(
-      70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
-
-  g_cameraTransform = projection * view;
 
   for (const ModelInstance& instance : g_instances) {
     instance.asset->shaders->use();
@@ -214,6 +233,8 @@ int main() {
   // Pass in > 0 to enable v-syncing
   glfwSwapInterval(0);
 
+  glfwSetWindowSizeCallback(window, onResize);
+
   // Initializes GLEW. This *must* be done after the OpenGL context creation
   // and GLFW initialization.
   if (glewInit() != GLEW_OK)
@@ -222,24 +243,37 @@ int main() {
   // Enables face-culling
   // glEnable(GL_CULL_FACE);
   // glCullFace(GL_BACK);
+  glEnable(GL_DEPTH_TEST);
 
   // Detects the primary monitor's screen width and height (Disabled until
   // fullscreen is fixed)
-  // const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-  // g_fullWidth = mode->width;
-  // g_fullHeight = mode->height;
-  // std::cout << "Monitor size detected: " << g_fullWidth << " by "
-  // << g_fullHeight << " pixels." << std::endl;
-  // bool fullscreen = false;
+  const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+  g_fullWidth             = mode->width;
+  g_fullHeight            = mode->height;
+  std::cout << "Monitor size detected: " << g_fullWidth << " by "
+            << g_fullHeight << " pixels." << std::endl;
 
   loadShaders();
   loadSpriteAsset();
   loadInstances();
 
+  double lastFrame = glfwGetTime();
+  float dt;
+  float accumulator = 0.0f;
+
   // Main loop
   while (!glfwWindowShouldClose(window) && running) {
+    double now = glfwGetTime();
+    dt         = now - lastFrame;
+    lastFrame  = now;
+    accumulator += dt;
 
-    render(window);
+    handleInput(window, running, fullscreen);
+
+    while (accumulator >= g_timeStep) {
+      update(g_timeStep);
+      accumulator -= g_timeStep;
+    }
 
     if (tc.update(1.0)) {
       std::size_t tps = tc.tickRate();
@@ -251,11 +285,13 @@ int main() {
       glfwSetWindowTitle(window, title.str().c_str());
     }
 
-    handleInput(window, running, fullscreen);
+    render(window);
 
     while (frameClock.getElapsedTime() < 1 / (double)g_fpsCap)
       ;
     frameClock.reset();
+
+    g_resizedLastFrame = false;
   }
 
   // Clean up and terminate

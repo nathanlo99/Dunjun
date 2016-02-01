@@ -7,7 +7,8 @@
 #include <Dunjun/Math/Quaternion.hpp>
 
 namespace Dunjun {
-inline Matrix4f identity() {
+
+inline Matrix4f identityMatrix() {
   Matrix4f m;
   m[0][0] = 1;
   m[1][1] = 1;
@@ -16,7 +17,7 @@ inline Matrix4f identity() {
   return m;
 }
 
-inline Matrix4f translate(const Vector3f& v) {
+inline Matrix4f translateMatrix(const Vector3f& v) {
   Matrix4f m;
   m[0][0] = 1.0f;
   m[1][1] = 1.0f;
@@ -25,7 +26,7 @@ inline Matrix4f translate(const Vector3f& v) {
   return m;
 }
 
-inline Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
+inline Matrix4f rotateMatrix(float angle, bool degrees, const Vector3f& v) {
 
   if (degrees) angle *= M_PI / 180;
 
@@ -54,7 +55,7 @@ inline Matrix4f rotate(float angle, bool degrees, const Vector3f& v) {
   return rot;
 }
 
-inline Matrix4f scale(const Vector3f& v) {
+inline Matrix4f scaleMatrix(const Vector3f& v) {
   Matrix4f result;
   result[0][0] = v[0];
   result[1][1] = v[1];
@@ -166,6 +167,10 @@ struct Transform {
   }
 
   inline Transform inverse() const { return Transform() / *this; }
+
+  inline Matrix4f toMatrix() {
+    return translateMatrix(position) * rotation.toMatrix() * scaleMatrix(scale);
+  }
 
   Vector3f position   = {0, 0, 0};
   Quaternion rotation = {0, 0, 0, 1};
