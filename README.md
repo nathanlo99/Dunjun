@@ -27,3 +27,4 @@ Episode List
 * [021 - Quaternion Functions](https://youtu.be/8pUqEspcS8w)
 * [022 - Transforms](https://youtu.be/XVkJkczl6tM)
 * [023 - Cleanup, Fixing](https://youtu.be/t5mZi9bJX3A)
+* [024 - Camera Class](https://youtu.be/l-DFRShm5wE)

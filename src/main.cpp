@@ -8,12 +8,11 @@
 #include <Dunjun/Vertex.hpp>
 #include <Dunjun/Math.hpp>
 
-GLOBAL const int g_fpsCap       = 240; // Basically unreachable
-GLOBAL const int g_effectiveFPS = 120;
-GLOBAL const float g_timeStep   = 1.0f / g_effectiveFPS;
-GLOBAL int g_windowWidth        = 800;
-GLOBAL int g_windowHeight       = 600;
-GLOBAL bool g_resizedLastFrame  = false;
+GLOBAL const int g_fpsCap      = 90;
+GLOBAL const float g_timeStep  = 1.0f / 60.f;
+GLOBAL int g_windowWidth       = 800;
+GLOBAL int g_windowHeight      = 600;
+GLOBAL bool g_resizedLastFrame = false;
 
 GLOBAL const char* g_windowTitle = "Dunjun";
 
