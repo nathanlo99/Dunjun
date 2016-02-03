@@ -36,7 +36,7 @@ struct ModelInstance {
 GLOBAL Dunjun::ShaderProgram* g_defaultShader;
 GLOBAL ModelAsset g_sprite;
 GLOBAL std::vector<ModelInstance> g_instances;
-GLOBAL Dunjun::Camera g_camera;
+GLOBAL Dunjun::Camera g_cam;
 
 INTERNAL void onResize(GLFWwindow* window, int width, int height) {
   if (g_resizedLastFrame) return;
@@ -55,9 +55,7 @@ INTERNAL void handleInput(GLFWwindow* window, bool& running, bool& fullscreen) {
   // Exit if ESCAPE is pressed
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) running = false;
 
-  fullscreen = fullscreen; // To stop 'unused' warnings until fullscreen fixed
-
-  // Toggle fullscreen if F11 is pressed (Disabled until later fix)
+  // TODO: Toggle fullscreen if F11 is pressed (Disabled until later fix)
   // if (glfwGetKey(window, GLFW_KEY_F11)) {
   //   fullscreen = !fullscreen;
   //   GLFWwindow *newWindow;
@@ -116,6 +114,11 @@ INTERNAL void loadSpriteAsset() {
 
 INTERNAL void loadInstances() {
 
+  // Initialize camera
+  g_cam.transform.position = Dunjun::Vector3f(2, 4, 7);
+  g_cam.lookAt({0, 0, 0});
+  g_cam.aspect = (float)g_windowWidth / (float)g_windowHeight;
+
   ModelInstance a;
   a.asset              = &g_sprite;
   a.transform.position = {0, 0, 0};
@@ -135,13 +138,61 @@ INTERNAL void loadInstances() {
   g_instances.push_back(c);
 }
 
-INTERNAL void update(float dt) {
-  g_camera.transform.position =
-      Dunjun::Vector3f(3 * cosf(glfwGetTime()), 1, 3 * sinf(glfwGetTime()));
-  g_camera.lookAt({0, 0, 0});
-  g_camera.isPerspective = true;
-  g_camera.FOV           = 70;
-  g_camera.aspect        = (float)g_windowWidth / (float)g_windowHeight;
+INTERNAL void update(GLFWwindow* window, float dt) {
+  {
+    const float v = 5.0f;
+    Dunjun::Vector3f direction(0, 0, 0);
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+      Dunjun::Vector3f f = g_cam.f();
+      f.y = 0;
+      direction += f.normalize();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+      Dunjun::Vector3f b = g_cam.b();
+      b.y = 0;
+      direction += b.normalize();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+      Dunjun::Vector3f l = g_cam.l();
+      l.y = 0;
+      direction += l.normalize();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+      Dunjun::Vector3f r = g_cam.r();
+      r.y = 0;
+      direction += r.normalize();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+      direction += {0, 1, 0};
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+      direction += {0, -1, 0};
+    }
+
+    if (direction.length() > 0)
+      g_cam.transform.position += direction.normalize() * dt * v;
+  }
+
+  // TODO: Fix mouse, currently doesn't move on Macs
+  // {
+  //   const float sensitivity = 0.03f;
+  //
+  //   double mx, my;
+  //   double cx = g_windowWidth / 2.0f;
+  //   double cy = g_windowHeight / 2.0f;
+  //   glfwGetCursorPos(window, &mx, &my);
+  //   my -= cy;
+  //   mx -= mx;
+  //   g_cam.offsetRotation(sensitivity * mx * dt, false, sensitivity * my * dt,
+  //                        false);
+  //   glfwSetCursorPos(window, cx, cy);
+  // }
 
   g_instances[0].transform.rotation =
       Dunjun::Quaternion(30 * dt, true, {0, 1, 0}) *
@@ -152,7 +203,7 @@ INTERNAL void renderInstance(const ModelInstance& instance) {
   ModelAsset* asset = instance.asset;
 
   asset->shaders->setUniform("u_transform", instance.transform);
-  asset->shaders->setUniform("u_camera", g_camera.getMatrix());
+  asset->shaders->setUniform("u_camera", g_cam.getMatrix());
 
   asset->shaders->setUniform("u_tex", 0);
   asset->texture->bind(0);
@@ -265,7 +316,7 @@ int main() {
     handleInput(window, running, fullscreen);
 
     while (accumulator >= g_timeStep) {
-      update(g_timeStep);
+      update(window, g_timeStep);
       accumulator -= g_timeStep;
     }
 

@@ -14,15 +14,33 @@ struct Camera {
   }
 
   inline void offsetRotation(float yaw, bool yaw_d, float pitch, bool pitch_d) {
-
+    transform.rotation = transform.rotation * Quaternion(pitch, pitch_d, r()) *
+                         Quaternion(yaw, yaw_d, {0, 1, 0});
   }
 
-  inline Vector3f f() const { return transform.rotation * Vector3f(0, 0, 1); }
-  inline Vector3f r() const { return transform.rotation * Vector3f(1, 0, 0); }
-  inline Vector3f u() const { return transform.rotation * Vector3f(0, 1, 0); }
-  inline Vector3f b() const { return transform.rotation * Vector3f(0, 0, -1); }
-  inline Vector3f l() const { return transform.rotation * Vector3f(-1, 0, 0); }
-  inline Vector3f d() const { return transform.rotation * Vector3f(0, -1, 0); }
+  inline Vector3f f() const {
+    return transform.rotation.conjugate() * Vector3f(0, 0, -1);
+  }
+
+  inline Vector3f r() const {
+    return transform.rotation.conjugate() * Vector3f(1, 0, 0);
+  }
+
+  inline Vector3f u() const {
+    return transform.rotation.conjugate() * Vector3f(0, 1, 0);
+  }
+
+  inline Vector3f b() const {
+    return transform.rotation.conjugate() * Vector3f(0, 0, 1);
+  }
+
+  inline Vector3f l() const {
+    return transform.rotation.conjugate() * Vector3f(-1, 0, 0);
+  }
+
+  inline Vector3f d() const {
+    return transform.rotation.conjugate() * Vector3f(0, -1, 0);
+  }
 
   inline Matrix4f getProjection() const {
     if (isPerspective) {
