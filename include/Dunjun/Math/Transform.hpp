@@ -2,9 +2,13 @@
 #ifndef DUNJUN_MATH_TRANSFORM_HPP
 #define DUNJUN_MATH_TRANSFORM_HPP
 
+#include <cmath>
+
 #include <Dunjun/Math/Vector3f.hpp>
 #include <Dunjun/Math/Matrix4f.hpp>
 #include <Dunjun/Math/Quaternion.hpp>
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 namespace Dunjun {
 
@@ -117,8 +121,8 @@ inline Matrix4f perspective(float fov, bool degrees, float aspect,
   return result;
 }
 
-inline Matrix4f lookAt(const Vector3f& eye, const Vector3f& center,
-                       const Vector3f& up) {
+inline Matrix4f m_lookAt(const Vector3f& eye, const Vector3f& center,
+                         const Vector3f& up) {
 
   const Vector3f f = (center - eye).normalize();
   const Vector3f s = f.cross(up).normalize();
@@ -176,6 +180,22 @@ struct Transform {
   Quaternion rotation = {0, 0, 0, 1};
   Vector3f scale      = {1, 1, 1};
 };
+
+inline Quaternion toQuaternion(const Matrix4f& m) {
+  Quaternion q;
+  float m00 = m[0][0];
+  float m11 = m[1][1];
+  float m22 = m[2][2];
+
+  q.w = sqrtf(MAX(0, 1 + m00 + m11 + m22)) / 2;
+  q.x = sqrtf(MAX(0, 1 + m00 - m11 - m22)) / 2;
+  q.y = sqrtf(MAX(0, 1 - m00 + m11 - m22)) / 2;
+  q.z = sqrtf(MAX(0, 1 - m00 - m11 + m22)) / 2;
+  q.x = copysign(q.x, m[1][2] - m[2][1]);
+  q.y = copysign(q.y, m[2][0] - m[0][2]);
+  q.z = copysign(q.z, m[0][1] - m[1][0]);
+  return q;
+}
 
 } // namespace Dunjun
 

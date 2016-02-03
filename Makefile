@@ -11,10 +11,13 @@ all: $(EXEC)
 	@echo Built!
 
 debug: $(EXEC)
-	gdb -ex "set environment MALLOC_CHECK_ 2" -ex "start" $(EXEC)
+	@gdb -ex "set environment MALLOC_CHECK_ 2" -ex "start" $(EXEC)
+
+todo:
+	@egrep -r -i "TODO|NOTE|FIXME" include/Dunjun src
 
 run: $(EXEC)
-	./$(EXEC)
+	@./$(EXEC)
 
 $(EXEC): $(OBJECTS)
 	@echo g++ $(WARNINGS) $(FLAGS) $(OBJECTS) -o $(EXEC)

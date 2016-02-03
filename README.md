@@ -28,3 +28,4 @@ Episode List
 * [022 - Transforms](https://youtu.be/XVkJkczl6tM)
 * [023 - Cleanup, Fixing](https://youtu.be/t5mZi9bJX3A)
 * [024 - Camera Class](https://youtu.be/l-DFRShm5wE)
+* [025 - Camera Class (Part 2)](https://youtu.be/30QORMjrpKA)

@@ -7,8 +7,9 @@
 #include <Dunjun/Texture.hpp>
 #include <Dunjun/Vertex.hpp>
 #include <Dunjun/Math.hpp>
+#include <Dunjun/Camera.hpp>
 
-GLOBAL const int g_fpsCap      = 90;
+GLOBAL const int g_fpsCap      = 9000;
 GLOBAL const float g_timeStep  = 1.0f / 60.f;
 GLOBAL int g_windowWidth       = 800;
 GLOBAL int g_windowHeight      = 600;
@@ -35,7 +36,7 @@ struct ModelInstance {
 GLOBAL Dunjun::ShaderProgram* g_defaultShader;
 GLOBAL ModelAsset g_sprite;
 GLOBAL std::vector<ModelInstance> g_instances;
-GLOBAL Dunjun::Matrix4f g_cameraTransform;
+GLOBAL Dunjun::Camera g_camera;
 
 INTERNAL void onResize(GLFWwindow* window, int width, int height) {
   if (g_resizedLastFrame) return;
@@ -44,13 +45,6 @@ INTERNAL void onResize(GLFWwindow* window, int width, int height) {
   g_windowWidth  = width;
   g_windowHeight = height;
   glViewport(0, 0, g_windowWidth, g_windowHeight);
-
-  Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
-
-  Dunjun::Matrix4f projection = Dunjun::perspective(
-      70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
-
-  g_cameraTransform = projection * view;
 
   std::cout << "RESIZED" << std::endl;
 }
@@ -142,15 +136,15 @@ INTERNAL void loadInstances() {
 }
 
 INTERNAL void update(float dt) {
-  const Dunjun::Matrix4f view = Dunjun::lookAt({1, 2, 4}, {0, 0, 0}, {0, 1, 0});
-
-  const Dunjun::Matrix4f projection = Dunjun::perspective(
-      70, true, (float)g_windowWidth / (float)g_windowHeight, 0.1f);
-
-  g_cameraTransform = projection * view;
+  g_camera.transform.position =
+      Dunjun::Vector3f(3 * cosf(glfwGetTime()), 1, 3 * sinf(glfwGetTime()));
+  g_camera.lookAt({0, 0, 0});
+  g_camera.isPerspective = true;
+  g_camera.FOV           = 70;
+  g_camera.aspect        = (float)g_windowWidth / (float)g_windowHeight;
 
   g_instances[0].transform.rotation =
-      Dunjun::Quaternion(120 * dt, true, {0, 1, 0}) *
+      Dunjun::Quaternion(30 * dt, true, {0, 1, 0}) *
       g_instances[0].transform.rotation;
 }
 
@@ -158,7 +152,7 @@ INTERNAL void renderInstance(const ModelInstance& instance) {
   ModelAsset* asset = instance.asset;
 
   asset->shaders->setUniform("u_transform", instance.transform);
-  asset->shaders->setUniform("u_camera", g_cameraTransform);
+  asset->shaders->setUniform("u_camera", g_camera.getMatrix());
 
   asset->shaders->setUniform("u_tex", 0);
   asset->texture->bind(0);
@@ -243,6 +237,7 @@ int main() {
   // glEnable(GL_CULL_FACE);
   // glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
 
   // Detects the primary monitor's screen width and height (Disabled until
   // fullscreen is fixed)
